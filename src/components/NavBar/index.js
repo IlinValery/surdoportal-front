@@ -13,6 +13,8 @@ import {
     DropdownItem } from 'reactstrap';
 
 import './style.css'
+import logo from './logo.svg'
+import jwt_decode from "jwt-decode";
 
 export default class NavBar extends React.Component {
     constructor(props) {
@@ -20,7 +22,11 @@ export default class NavBar extends React.Component {
 
         this.toggle = this.toggle.bind(this);
         this.state = {
-            isOpen: false
+            isOpen: false,
+            isLogined: false,
+            first_name: '',
+            second_name: '',
+            isSuperuser: false,
         };
     }
     toggle() {
@@ -28,37 +34,71 @@ export default class NavBar extends React.Component {
             isOpen: !this.state.isOpen
         });
     }
+    componentDidMount() {
+        const token = localStorage.getItem('usertoken');
+        if (token){
+            this.setState({isLogined: true});
+            console.log(token);
+            const decoded = jwt_decode(token);
+            console.log(decoded.identity.is_superuser);
+            this.setState({
+                first_name: decoded.identity.first_name,
+                second_name: decoded.identity.second_name,
+                isSuperuser: decoded.identity.is_superuser===1,
+
+            })
+        }
+
+    }
+
+    logout(){
+        localStorage.removeItem('usertoken');
+        window.location.replace('/')
+    }
     render() {
         return (
             <div>
                 <Navbar color="light" light fixed="top" expand="md">
-                    <NavbarBrand href="/">reactstrap</NavbarBrand>
+                    <NavbarBrand href="/">
+                        <img src={logo} className="d-inline-block align-top" style={{height:35, width:40, marginRight: 10}} alt="surdoportal logo" />
+                        Сурдопортал
+                    </NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
                             <NavItem>
-                                <NavLink href="/components/">Components</NavLink>
+                                <NavLink href="/terms">Все термины</NavLink>
                             </NavItem>
-                            <NavItem>
-                                <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
-                            </NavItem>
-                            <UncontrolledDropdown nav inNavbar>
-                                <DropdownToggle nav caret>
-                                    Options
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem>
-                                        Option 1
-                                    </DropdownItem>
-                                    <DropdownItem>
-                                        Option 2
-                                    </DropdownItem>
-                                    <DropdownItem divider />
-                                    <DropdownItem>
-                                        Reset
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </UncontrolledDropdown>
+                            {!this.state.isLogined? (
+                                <NavItem>
+                                    <NavLink href="/login">Вход</NavLink>
+                                </NavItem>
+                            ):(
+                                <UncontrolledDropdown nav inNavbar>
+                                    <DropdownToggle nav caret>
+                                        Администрирование
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                        <DropdownItem onClick={() => {window.location.replace('/profile')}}>
+                                            Профиль {this.state.first_name} {this.state.second_name}
+                                        </DropdownItem>
+                                        {this.state.isSuperuser? (
+                                            <div>
+                                                <DropdownItem divider />
+                                                <DropdownItem>
+                                                    Возможности суперпользователя
+                                                </DropdownItem>
+                                            </div>
+                                        ):(
+                                            <div></div>
+                                        )}
+                                        <DropdownItem divider />
+                                        <DropdownItem onClick={()=>this.logout()}>
+                                            Выход
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </UncontrolledDropdown>
+                            )}
                         </Nav>
                     </Collapse>
                 </Navbar>

@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css'
-//import axios from 'axios'
-
+import photo from "./index.jpg"
+import Container from "reactstrap/es/Container";
 
 class HomePage extends React.Component {
 
@@ -10,18 +10,19 @@ class HomePage extends React.Component {
 
         this.state={
             respData: null,
+            connectionSuccessful: false
         }
 
     }
 
     componentDidMount() {
-        fetch('/todo/tasks/1')
+        fetch('/api/test_connection_with_server')
             .then( (response) => {
                 if (response.status !== 200) {
                     console.log('Looks like there was a problem. Status Code: ' +
                         response.status);
                     return;
-                }
+                } else {this.setState({connectionSuccessful:true})}
                 return response.json();
             })
             .then((data) => {
@@ -29,24 +30,30 @@ class HomePage extends React.Component {
                     respData: data
                 })
             })
-            .catch(function(err) {
+            .catch((err) => {
+                this.setState({
+                    respData: null
+                });
+
                 console.log('Fetch Error:', err);
             });
     }
 
     render() {
-        console.log(this.state.respData)
         return (
             <div>
-                <h1>Стартовая страница Сурдопортала</h1>
-                {this.state.respData!==null? (
+                <h1 className={"text-center"}>Добро пожаловать на Сурдопортал</h1>
+                <Container>
+                    <img src={photo} className="img-fluid rounded mx-auto d-block" alt="with enterpreter"/>
+                </Container>
+                {this.state.connectionSuccessful? (
                     <div>
-                        <h1>Данные были успешно загружены</h1>
-                        <p>{this.state.respData.data.description}</p>
+                        <h6>Соединение с сервером установлено</h6>
                     </div>
                 ): (
-                    <div>печалька</div>
+                    <div>Соединение с сервером отсутствует</div>
                 )}
+
             </div>
 
         );
