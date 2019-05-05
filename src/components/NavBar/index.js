@@ -82,11 +82,29 @@ export default class NavBar extends React.Component {
                                         <DropdownItem onClick={() => {window.location.replace('/profile')}}>
                                             Профиль {this.state.first_name} {this.state.second_name}
                                         </DropdownItem>
+
+                                        <DropdownItem disabled onClick={() => {window.location.replace('/terms/edit')}}>
+                                            Управление терминами
+                                        </DropdownItem>
+
                                         {this.state.isSuperuser? (
                                             <div>
                                                 <DropdownItem divider />
-                                                <DropdownItem>
-                                                    Возможности суперпользователя
+                                                <DropdownItem disabled>
+                                                    Управление пользователями
+                                                </DropdownItem>
+                                                <DropdownItem disabled>
+                                                    Управление дисциплинами
+                                                </DropdownItem>
+                                                <DropdownItem disabled>
+                                                    Управление кафедрами
+                                                </DropdownItem>
+                                                <DropdownItem disabled>
+                                                    Управление преподавателями
+                                                </DropdownItem>
+                                                <DropdownItem divider />
+                                                <DropdownItem disabled>
+                                                    Журнал действий
                                                 </DropdownItem>
                                             </div>
                                         ):(
