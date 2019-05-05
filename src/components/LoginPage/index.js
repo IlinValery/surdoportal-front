@@ -2,6 +2,7 @@ import React from 'react';
 import './style.css'
 import {Col, Row, Container, Jumbotron} from 'reactstrap'
 import {Form, FormGroup, Input, Label, Button} from 'reactstrap'
+//import jwt_decode from "jwt-decode";
 
 
 class LoginPage extends React.Component {
@@ -11,14 +12,21 @@ class LoginPage extends React.Component {
 
         this.state={
             email: "",
-            password: ""
+            password: "",
+            renderAllow: false
+        }
+    }
+
+    isLoggedIn(){
+        if (localStorage.getItem('usertoken')!==null){
+            window.location.replace('/profile/me')
+        } else {
+            this.setState({
+                renderAllow: true
+            })
         }
 
     }
-
-    componentDidMount() {
-    }
-
     emailChange(value){
         //todo email validation minimum
         this.setState({
@@ -57,7 +65,7 @@ class LoginPage extends React.Component {
             .then((data) => {
                 if (data.token) {
                     localStorage.setItem('usertoken', data.token);
-                    window.location.replace('/profile');
+                    window.location.replace('/profile/me');
                     console.log('success:',data)
                 }
                 if (data.error){
@@ -72,46 +80,51 @@ class LoginPage extends React.Component {
 
 
     }
+
+    componentWillMount() {
+        this.isLoggedIn();
+    }
+
     render() {
         return (
             <div>
-                <Container style={{marginTop: "8%",}}>
-                    <Row>
-                        <Col xl={"2"} xs={"0"}/>
-                        <Col>
-                            <Jumbotron>
-                                <h1>Войти в систему</h1>
-                                <Form>
-                                    <FormGroup>
-                                        <Label for="email">Электронная почта</Label>
-                                        <Input type="email" name="email" id="email" required
-                                               placeholder="Ваша электронная почта"
-                                               onChange={(evt) => this.emailChange(evt.currentTarget.value)}/>
-                                    </FormGroup>
-                                    <FormGroup>
-                                        <Label for="password">Пароль</Label>
-                                        <Input type="password" name="password" id="password" required
-                                               onChange={(evt) => this.passwordChange(evt.currentTarget.value)}
-                                               placeholder="Ваш пароль"/>
-                                    </FormGroup>
-                                </Form>
-                                <Row style={{marginTop: "16px",}}>
-                                    <Col xl={"2"} xs={"1"}/>
-                                    <Col>
-                                        <Button color={"primary"} block size={"lg"}
-                                        onClick={() => this.sendData()}>
-                                            Войти в систему
-                                        </Button>
-                                    </Col>
-                                    <Col xl={"2"} xs={"1"}/>
-                                </Row>
-                            </Jumbotron>
-                        </Col>
-                        <Col xl={"2"} xs={"0"}/>
-                    </Row>
-                </Container>
-
-
+                {this.state.renderAllow? (<div>
+                    <Container style={{marginTop: "8%",}}>
+                        <Row>
+                            <Col xl={"2"} xs={"0"}/>
+                            <Col>
+                                <Jumbotron>
+                                    <h1>Войти в систему</h1>
+                                    <Form>
+                                        <FormGroup>
+                                            <Label for="email">Электронная почта</Label>
+                                            <Input type="email" name="email" id="email" required
+                                                   placeholder="Ваша электронная почта"
+                                                   onChange={(evt) => this.emailChange(evt.currentTarget.value)}/>
+                                        </FormGroup>
+                                        <FormGroup>
+                                            <Label for="password">Пароль</Label>
+                                            <Input type="password" name="password" id="password" required
+                                                   onChange={(evt) => this.passwordChange(evt.currentTarget.value)}
+                                                   placeholder="Ваш пароль"/>
+                                        </FormGroup>
+                                    </Form>
+                                    <Row style={{marginTop: "16px",}}>
+                                        <Col xl={"2"} xs={"1"}/>
+                                        <Col>
+                                            <Button color={"primary"} block size={"lg"}
+                                                    onClick={() => this.sendData()}>
+                                                Войти в систему
+                                            </Button>
+                                        </Col>
+                                        <Col xl={"2"} xs={"1"}/>
+                                    </Row>
+                                </Jumbotron>
+                            </Col>
+                            <Col xl={"2"} xs={"0"}/>
+                        </Row>
+                    </Container>
+                </div>):(<div></div>)}
             </div>
 
         );

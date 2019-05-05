@@ -1,6 +1,10 @@
 import React from 'react';
 import './style.css'
 import jwt_decode from 'jwt-decode'
+import {Jumbotron} from "reactstrap";
+import Container from "reactstrap/es/Container";
+import Row from "reactstrap/es/Row";
+import Col from "reactstrap/es/Col";
 
 class ProfilePage extends React.Component {
 
@@ -12,7 +16,7 @@ class ProfilePage extends React.Component {
             first_name: "",
             second_name: "",
             email: "",
-            is_superuser: ""
+            is_superuser: null
 
         }
 
@@ -24,7 +28,10 @@ class ProfilePage extends React.Component {
             this.setState({isLoggedIn : true})
             const decoded = jwt_decode(token);
             this.setState({
-                first_name: decoded.identity.first_name
+                first_name: decoded.identity.first_name,
+                second_name: decoded.identity.second_name,
+                email: decoded.identity.email,
+                is_superuser: decoded.identity.is_superuser,
             })
         } else {
             this.setState({isLoggedIn : false})
@@ -34,14 +41,24 @@ class ProfilePage extends React.Component {
 
     render() {
         return (
-            <div>
-                {this.state.isLoggedIn?(<div>
-                    <h1>Страница профиля</h1>
-                    <p>{this.state.first_name}</p>
-                </div>): (
-                    <div>
-                        <h1>Для получения доступа требуется авторизация</h1>
-                    </div>)}
+            <div style={{marginTop: "20px"}}>
+                <Container>
+                    <Row>
+                        <Col>
+                            <Jumbotron>
+                            {this.state.isLoggedIn?(<div>
+                                <h1 className={"text-left"}>Личная страница профиля</h1>
+                                <h3>Пользователь: <u>{this.state.first_name} {this.state.second_name}</u></h3>
+                                <h3>Электронная почта: <a href={"mailto:"+ this.state.email}>{this.state.email}</a></h3>
+                                <h3>Статус в системе: {this.state.is_superuser? ("Администратор системы"): ("Сурдопереводчик")}</h3>
+                            </div>): (
+                                <div>
+                                    <h1>Для получения доступа требуется авторизация</h1>
+                                </div>)}
+                            </Jumbotron>
+                        </Col>
+                    </Row>
+                </Container>
             </div>
 
         );

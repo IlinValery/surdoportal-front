@@ -34,27 +34,24 @@ export default class NavBar extends React.Component {
             isOpen: !this.state.isOpen
         });
     }
-    componentDidMount() {
-        const token = localStorage.getItem('usertoken');
-        if (token){
-            this.setState({isLogined: true});
-            console.log(token);
-            const decoded = jwt_decode(token);
-            console.log(decoded.identity.is_superuser);
-            this.setState({
-                first_name: decoded.identity.first_name,
-                second_name: decoded.identity.second_name,
-                isSuperuser: decoded.identity.is_superuser===1,
-
-            })
-        }
-
-    }
 
     logout(){
         localStorage.removeItem('usertoken');
         window.location.replace('/')
     }
+
+
+    componentWillMount() {
+        const token = localStorage.getItem('usertoken');
+        if (token!==undefined){
+            try {
+                jwt_decode(token);
+            } catch (err) {
+                localStorage.clear();
+            }
+        }
+    }
+
     render() {
         return (
             <div>
@@ -79,7 +76,7 @@ export default class NavBar extends React.Component {
                                         Администрирование
                                     </DropdownToggle>
                                     <DropdownMenu right>
-                                        <DropdownItem onClick={() => {window.location.replace('/profile')}}>
+                                        <DropdownItem onClick={() => {window.location.replace('/profile/me')}}>
                                             Профиль {this.state.first_name} {this.state.second_name}
                                         </DropdownItem>
 
@@ -123,4 +120,22 @@ export default class NavBar extends React.Component {
             </div>
         );
     }
+
+    componentDidMount() {
+        const token = localStorage.getItem('usertoken');
+        if (token){
+            this.setState({isLogined: true});
+            console.log(token);
+            const decoded = jwt_decode(token);
+            console.log(decoded.identity.is_superuser);
+            this.setState({
+                first_name: decoded.identity.first_name,
+                second_name: decoded.identity.second_name,
+                isSuperuser: decoded.identity.is_superuser===1,
+
+            })
+        }
+
+    }
+
 }

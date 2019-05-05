@@ -2,6 +2,8 @@ import React from 'react';
 import './style.css'
 import photo from "./index.jpg"
 import Container from "reactstrap/es/Container";
+import Row from "reactstrap/es/Row";
+import Col from "reactstrap/es/Col";
 
 class HomePage extends React.Component {
 
@@ -9,51 +11,32 @@ class HomePage extends React.Component {
         super(props);
 
         this.state={
-            respData: null,
-            connectionSuccessful: false
         }
 
     }
 
     componentDidMount() {
-        fetch('/api/test_connection_with_server')
-            .then( (response) => {
-                if (response.status !== 200) {
-                    console.log('Looks like there was a problem. Status Code: ' +
-                        response.status);
-                    return;
-                } else {this.setState({connectionSuccessful:true})}
-                return response.json();
-            })
-            .then((data) => {
-                this.setState({
-                    respData: data
-                })
-            })
-            .catch((err) => {
-                this.setState({
-                    respData: null
-                });
 
-                console.log('Fetch Error:', err);
-            });
     }
 
     render() {
         return (
-            <div>
-                <h1 className={"text-center"}>Добро пожаловать на Сурдопортал</h1>
+            <div className={"home-page-container"}>
+                <h1 className={"text-center"}>СУРДОПОРТАЛ</h1>
+                <h2 className={"text-center"}>ИНТЕРАКТИВНАЯ БАЗА ТЕРМИНОВ,<br/>ИХ ОПРЕДЕЛЕНИЙ И ЖЕСТОВ</h2>
                 <Container>
                     <img src={photo} className="img-fluid rounded mx-auto d-block" alt="with enterpreter"/>
                 </Container>
-                {this.state.connectionSuccessful? (
-                    <div>
-                        <h6>Соединение с сервером установлено</h6>
-                    </div>
-                ): (
-                    <div>Соединение с сервером отсутствует</div>
-                )}
-
+                <Container>
+                    <Row>
+                        <Col/>
+                        <Col className={"home-count-terms"}>
+                            <h2 className={"text-center "} style={{marginBottom: 0, fontWeight: "bold"}}>TODO</h2>
+                            <h3 className={"text-center "} style={{marginTop: 0}}>терминов представлено в системе</h3>
+                        </Col>
+                        <Col/>
+                    </Row>
+                </Container>
             </div>
 
         );
