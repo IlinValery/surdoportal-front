@@ -48,11 +48,11 @@ export default class Footer extends React.Component {
                         <div className={"col-sm-6 text-left"}>
                             {this.state.connectionSuccessful? (
                                 <div>
-                                    Состояние системы: <FontAwesomeIcon icon="stroopwafel" color={"green"} title={"Соединение с сервером установлено"}/>
+                                    Состояние системы: <FontAwesomeIcon icon="check" color={"green"} title={"Соединение с сервером установлено"}/>
                                 </div>
                             ): (
                                 <div>
-                                    Состояние системы: <FontAwesomeIcon icon="stroopwafel" color={"red"} title={"Соединение с сервером отсутствует"}/>
+                                    Состояние системы: <FontAwesomeIcon icon="times" color={"red"} title={"Соединение с сервером отсутствует"}/>
                                 </div>
                             )}
 

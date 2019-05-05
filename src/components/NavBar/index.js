@@ -87,7 +87,7 @@ export default class NavBar extends React.Component {
                                         {this.state.isSuperuser? (
                                             <div>
                                                 <DropdownItem divider />
-                                                <DropdownItem disabled>
+                                                <DropdownItem onClick={() => {window.location.replace('/profile/all')}}>
                                                     Управление пользователями
                                                 </DropdownItem>
                                                 <DropdownItem disabled>
