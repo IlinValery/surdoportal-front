@@ -1,26 +1,73 @@
 import React from 'react';
-import {Route} from 'react-router-dom'
+import {Route, Switch} from 'react-router-dom'
 
 import HomePage from './components/HomePage'
 import LoginPage from './components/LoginPage'
-import ProfilePage from "./components/ProfilePage";
+import ProfilePage from "./components/Profiles/ProfilePage";
 import TermsPublicPage from "./components/TermsPublicPage";
-import ProfilesPage from "./components/ProfilesPage";
+import ProfilesPage from "./components/Profiles/ProfilesPage";
 import Page404 from "./components/404Page";
+import jwt_decode from "jwt-decode";
+import ProfileCreateEditPage from "./components/Profiles/ProfileCreateEditPage";
+
 
 class Content extends React.Component {
+    constructor(props){
+        super(props);
+
+        this.state={
+            loggedIn: false,
+            isSuperuser: false
+        }
+
+    }
+
+    componentWillMount() {
+        let token = localStorage.getItem('usertoken');
+        try {
+            let decoded = jwt_decode(token);
+            this.setState({
+                loggedIn: true,
+                isSuperuser: decoded.identity.is_superuser===1,
+            });
+        } catch (e) {
+            this.setState({
+                loggedIn: false,
+                isSuperuser: false,
+            });
+        }
+    }
+
     render() {
         return (
             <div className={"portal-content"}>
+                <Switch>
+                    <Route exact path='/' component={HomePage}/>
+                    <Route exact path='/login' component={LoginPage}/>
+                    <Route exact path='/terms' component={TermsPublicPage}/>
 
-                <Route exact path='/' component={HomePage}/>
-                <Route exact path='/login' component={LoginPage}/>
-                <Route exact path='/profile/me' component={ProfilePage}/>
-                <Route exact path='/profile/all' component={ProfilesPage}/>
-                <Route exact path='/terms' component={TermsPublicPage}/>
+                    {this.state.loggedIn? (<div>
+                        <Switch>
+                            <Route exact path='/profile/me' component={ProfilePage}/>
 
+                            {/*Здесь все, что доступно только зашедшим в систему*/}
 
-                <Route exact path='/404' component={Page404}/>
+                            {this.state.isSuperuser? (<div>
+                                <Route exact path='/profile/all' component={ProfilesPage}/>
+                                <Route exact path='/profile/new' component={ProfileCreateEditPage}/>
+                                <Route exact path='/profile/edit/:number' component={ProfileCreateEditPage}/>
+
+                                {/*Здесь все, что доступно только суперпользователю системы*/}
+                            </div>): (<div>
+                                <Route exact path='*' component={Page404} status={"permissions"}/>
+                            </div>)}
+                        </Switch>
+
+                    </div>): (<div>
+                            <Route exact path='*' component={Page404} status={"not_found"}/>
+                    </div>)}
+
+                </Switch>
 
             </div>
         );

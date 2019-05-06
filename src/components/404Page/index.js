@@ -19,8 +19,9 @@ export default class Page404 extends React.Component {
 
     render() {
         return (
-            <div>
-                <h1>Ничего не найдено либо недостаточно прав доступа <FontAwesomeIcon icon="times" color={"red"}/></h1>
+            <div className={"text-center"} style={{paddingTop: "25vh"}}>
+                <h1>Я куда-то нажал<br/>и все исчезло<br/><a href={"/"}><FontAwesomeIcon icon="poo" color={"#64400f"}/></a></h1>
+                <p>Ничего не найдено либо недостаточно прав доступа</p>
             </div>
 
         );

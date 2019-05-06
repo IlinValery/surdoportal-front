@@ -3,6 +3,9 @@ import './style.css'
 import Container from "reactstrap/es/Container";
 import Table from "reactstrap/es/Table";
 import ProfileInList from "./ProfileInList";
+import Row from "reactstrap/es/Row";
+import Col from "reactstrap/es/Col";
+import Button from "reactstrap/es/Button";
 
 
 export default class ProfilesPage extends React.Component {
@@ -46,7 +49,21 @@ export default class ProfilesPage extends React.Component {
                         {this.renderUsers(this.state.users)}
                         </tbody>
                     </Table>
-                </div>):(<div><h2>Loading TODO</h2></div>)}
+                    <Row>
+                        <Col/>
+                        <Col className={"text-center"}>
+                            <Button color={"primary"}>Добавить нового</Button>
+                        </Col>
+                        <Col/>
+                    </Row>
+                </div>):(
+                    <div className={"text-center"} style={{marginTop: "32px"}}>
+                        <h2 >Загрузка списка пользователей</h2>
+                        <div className="spinner-border text-primary" role="status" style={{width: "3rem", height: "3rem"}} >
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                )}
                 </Container>
             </div>
 

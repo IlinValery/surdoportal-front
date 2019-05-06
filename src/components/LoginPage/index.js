@@ -2,7 +2,6 @@ import React from 'react';
 import './style.css'
 import {Col, Row, Container, Jumbotron} from 'reactstrap'
 import {Form, FormGroup, Input, Label, Button} from 'reactstrap'
-//import jwt_decode from "jwt-decode";
 
 
 class LoginPage extends React.Component {
