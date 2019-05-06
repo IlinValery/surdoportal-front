@@ -42,6 +42,7 @@ export default class ProfilesPage extends React.Component {
                                 <th>Имя</th>
                                 <th>Фамилия</th>
                                 <th>Почта</th>
+                                <th className={"text-left"}>Действие</th>
                             </tr>
                         </thead>
 
@@ -52,7 +53,7 @@ export default class ProfilesPage extends React.Component {
                     <Row>
                         <Col/>
                         <Col className={"text-center"}>
-                            <Button color={"primary"}>Добавить нового</Button>
+                            <Button color={"primary"} onClick={()=>{window.location.replace('/profile/new')}}>Добавить нового</Button>
                         </Col>
                         <Col/>
                     </Row>

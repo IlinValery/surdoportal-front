@@ -42,7 +42,10 @@ export default class ProfileInList extends React.Component {
                 <td>{this.props.user.second_name}</td>
                 <td>{this.props.user.email}</td>
                 <td className={"text-left"} style={{width: "auto"}}>
-                    <Button color="primary" outline size="sm" style={{marginRight: "8px",}} title={"Редактировать пользователя "+this.props.user.email}>
+                    <Button color="primary" outline size="sm"
+                            style={{marginRight: "8px",}}
+                            onClick={()=>{window.location.replace('/profile/edit/'+this.props.user.iduser)}}
+                            title={"Редактировать пользователя "+this.props.user.email}>
                         <FontAwesomeIcon icon="pen" />
                     </Button>
                     <Button color="danger" outline size="sm"

@@ -50,7 +50,7 @@ class ProfilePage extends React.Component {
                                 <h1 className={"text-left"}>Личная страница профиля</h1>
                                 <h3>Пользователь: <u>{this.state.first_name} {this.state.second_name}</u></h3>
                                 <h3>Электронная почта: <a href={"mailto:"+ this.state.email}>{this.state.email}</a></h3>
-                                <h3>Статус в системе: {this.state.is_superuser? ("Администратор системы"): ("Сурдопереводчик")}</h3>
+                                <h3>Статус в системе: {this.state.is_superuser? ("администратор системы"): ("сурдопереводчик")}.</h3>
                             </div>): (
                                 <div>
                                     <h1>Для получения доступа требуется авторизация</h1>
