@@ -7,6 +7,7 @@ import Row from "reactstrap/es/Row";
 import Col from "reactstrap/es/Col";
 import Button from "reactstrap/es/Button";
 
+//window.location.replace('/profile/new')
 
 export default class ProfilesPage extends React.Component {
 
@@ -14,9 +15,7 @@ export default class ProfilesPage extends React.Component {
         super(props);
 
         this.state={
-
         }
-
     }
 
     componentWillMount() {
@@ -25,10 +24,11 @@ export default class ProfilesPage extends React.Component {
     renderUsers(users){
         const userItems = [];
         for (let i=0; i < users.length; i++) {
-            userItems.push(<ProfileInList user={users[i]}/>);
+            userItems.push(<ProfileInList key={users[i].iduser} user={users[i]}/>);
         }
         return userItems;
     }
+
     render() {
         return (
             <div>
@@ -53,14 +53,16 @@ export default class ProfilesPage extends React.Component {
                     <Row>
                         <Col/>
                         <Col className={"text-center"}>
-                            <Button color={"primary"} onClick={()=>{window.location.replace('/profile/new')}}>Добавить нового</Button>
+                            <Button color={"primary"} onClick={()=>{window.location.href = "/profile/new"}}>
+                                Добавить пользователя
+                            </Button>
                         </Col>
                         <Col/>
                     </Row>
                 </div>):(
                     <div className={"text-center"} style={{marginTop: "32px"}}>
                         <h2 >Загрузка списка пользователей</h2>
-                        <div className="spinner-border text-primary" role="status" style={{width: "3rem", height: "3rem"}} >
+                        <div className="spinner-border text-primary" role="status" style={{width: "5rem", height: "5rem"}} >
                             <span className="sr-only">Loading...</span>
                         </div>
                     </div>
@@ -82,7 +84,6 @@ export default class ProfilesPage extends React.Component {
                 return response.json();
             })
             .then((data) => {
-                console.log(data);
                 this.setState({
                     users: data.data,
                 })

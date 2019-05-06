@@ -44,7 +44,7 @@ export default class ProfileInList extends React.Component {
                 <td className={"text-left"} style={{width: "auto"}}>
                     <Button color="primary" outline size="sm"
                             style={{marginRight: "8px",}}
-                            onClick={()=>{window.location.replace('/profile/edit/'+this.props.user.iduser)}}
+                            onClick={()=>{window.location.href = ('/profile/edit/'+this.props.user.iduser)}}
                             title={"Редактировать пользователя "+this.props.user.email}>
                         <FontAwesomeIcon icon="pen" />
                     </Button>

@@ -76,18 +76,18 @@ export default class NavBar extends React.Component {
                                         Администрирование
                                     </DropdownToggle>
                                     <DropdownMenu right>
-                                        <DropdownItem onClick={() => {window.location.replace('/profile/me')}}>
+                                        <DropdownItem onClick={() => {window.location.href = '/profile/me'}}>
                                             Профиль {this.state.first_name} {this.state.second_name}
                                         </DropdownItem>
 
-                                        <DropdownItem disabled onClick={() => {window.location.replace('/terms/edit')}}>
+                                        <DropdownItem disabled onClick={() => {window.location.href = '/terms/edit'}}>
                                             Управление терминами
                                         </DropdownItem>
 
                                         {this.state.isSuperuser? (
                                             <div>
                                                 <DropdownItem divider />
-                                                <DropdownItem onClick={() => {window.location.replace('/profile/all')}}>
+                                                <DropdownItem onClick={() => {window.location.href ='/profile/all'}}>
                                                     Управление пользователями
                                                 </DropdownItem>
                                                 <DropdownItem disabled>
@@ -125,9 +125,7 @@ export default class NavBar extends React.Component {
         const token = localStorage.getItem('usertoken');
         if (token){
             this.setState({isLogined: true});
-            console.log(token);
             const decoded = jwt_decode(token);
-            console.log(decoded.identity.is_superuser);
             this.setState({
                 first_name: decoded.identity.first_name,
                 second_name: decoded.identity.second_name,

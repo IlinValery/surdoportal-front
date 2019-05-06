@@ -46,26 +46,21 @@ class Content extends React.Component {
                     <Route exact path='/login' component={LoginPage}/>
                     <Route exact path='/terms' component={TermsPublicPage}/>
 
-                    {this.state.loggedIn? (<div>
-                        <Switch>
-                            <Route exact path='/profile/me' component={ProfilePage}/>
+                    {!this.state.loggedIn ? (<Route exact path='*' component={Page404} status={"not_found"}/>) : (
+                            <Switch>
+                                <Route exact path='/profile/me' component={ProfilePage}/>
 
-                            {/*Здесь все, что доступно только зашедшим в систему*/}
+                                {/*Здесь все, что доступно только зашедшим в систему*/}
 
-                            {this.state.isSuperuser? (<div>
-                                <Route exact path='/profile/all' component={ProfilesPage}/>
-                                <Route exact path='/profile/new' component={ProfileCreateEditPage}/>
-                                <Route exact path='/profile/edit/:number' component={ProfileCreateEditPage}/>
+                                {this.state.isSuperuser ? (<Switch>
+                                    <Route exact path='/profile/all' component={ProfilesPage}/>
+                                    <Route exact path='/profile/new' component={ProfileCreateEditPage}/>
+                                    <Route exact path='/profile/edit/:number' component={ProfileCreateEditPage}/>
 
-                                {/*Здесь все, что доступно только суперпользователю системы*/}
-                            </div>): (<div>
-                                <Route exact path='*' component={Page404} status={"permissions"}/>
-                            </div>)}
-                        </Switch>
-
-                    </div>): (<div>
-                            <Route exact path='*' component={Page404} status={"not_found"}/>
-                    </div>)}
+                                    {/*Здесь все, что доступно только суперпользователю системы*/}
+                                </Switch>) : (<Route exact path='*' component={Page404} status={"permissions"}/>)}
+                            </Switch>
+                    )}
 
                 </Switch>
 
