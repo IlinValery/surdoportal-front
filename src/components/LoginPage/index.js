@@ -2,6 +2,7 @@ import React from 'react';
 import './style.css'
 import {Col, Row, Container, Jumbotron} from 'reactstrap'
 import {Form, FormGroup, Input, Label, Button} from 'reactstrap'
+import Fade from "reactstrap/es/Fade";
 
 
 class LoginPage extends React.Component {
@@ -12,7 +13,8 @@ class LoginPage extends React.Component {
         this.state={
             email: "",
             password: "",
-            renderAllow: false
+            renderAllow: false,
+            errorCode: 0
         }
     }
 
@@ -41,10 +43,6 @@ class LoginPage extends React.Component {
     }
 
     sendData(){
-        let data2post = [];
-        data2post['email'] = this.state.email;
-        data2post['password'] = this.state.password;
-        console.log(data2post);
         fetch('/api/user/login', {
             method: 'POST',
             headers: {
@@ -58,17 +56,19 @@ class LoginPage extends React.Component {
                     console.log('Looks like there was a problem. Status Code: ' +
                         response.status);
                     return;
-                } else {console.log("status 200")}
+                }
                 return response.json();
             })
             .then((data) => {
                 if (data.token) {
                     localStorage.setItem('usertoken', data.token);
                     window.location.replace('/profile/me');
-                    console.log('success:',data)
                 }
                 if (data.error){
-                    console.log('error:',data)
+                    this.setState({
+                        errorCode: data.error.code
+                    });
+                    console.log(this.state.errorCode)
                 }
             })
             .catch((err) => {
@@ -111,6 +111,10 @@ class LoginPage extends React.Component {
                                     <Row style={{marginTop: "16px",}}>
                                         <Col xl={"2"} xs={"1"}/>
                                         <Col>
+                                            <Fade in={this.state.errorCode!==0} tag="h6" className={"text-center"} style={{color: "#ff6347"}}>
+                                                {this.state.errorCode===1? ("Такого пользователя нет в системе"):("Неверный пароль")}
+                                            </Fade>
+
                                             <Button color={"primary"} block size={"lg"}
                                                     onClick={() => this.sendData()}>
                                                 Войти в систему

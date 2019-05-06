@@ -8,24 +8,25 @@ export default class ProfileCreateEditPage extends React.Component {
         super(props);
 
         this.state={
-            userID: undefined
+            userID: undefined,
+            isFromForEdit: false
 
         }
 
     }
 
-    componentDidMount() {
+    componentWillMount() {
+        let u_id = parseInt(this.props.match.params.number, 10)
         this.setState({
-            userID: parseInt(this.props.match.params.number, 10)
+            userID: u_id,
+            isFromForEdit: u_id>0
         })
     }
 
     render() {
-        console.log(this.state.userID);
-
         return (
             <div>
-            {this.state.userID===undefined? (<LoadingMessage message={"Идет загрузка, подождите"}/>):(
+            {this.state.userID===undefined? (<LoadingMessage message={"Идет загрузка контента, подождите"}/>):(
                     <div>
                         <h1>Page for edit/new user</h1>
                     </div>
@@ -33,4 +34,11 @@ export default class ProfileCreateEditPage extends React.Component {
             </div>
         );
     }
+
+    componentDidMount() {
+        if (this.state.isFromForEdit){
+            console.log("edit")
+        }
+    }
+
 }
