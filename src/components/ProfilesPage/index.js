@@ -1,5 +1,8 @@
 import React from 'react';
 import './style.css'
+import Container from "reactstrap/es/Container";
+import Table from "reactstrap/es/Table";
+import ProfileInList from "./ProfileInList";
 
 
 export default class ProfilesPage extends React.Component {
@@ -19,17 +22,32 @@ export default class ProfilesPage extends React.Component {
     renderUsers(users){
         const userItems = [];
         for (let i=0; i < users.length; i++) {
-            userItems.push(<h1>{users[i].email}</h1>);
+            userItems.push(<ProfileInList user={users[i]}/>);
         }
         return userItems;
     }
     render() {
         return (
             <div>
-                <h1>Пользователи в системе</h1>
+                <Container>
+                <h1 className={"text-center"}>Пользователи в системе</h1>
                 {this.state.users? (<div>
-                    {this.renderUsers(this.state.users)}
-                </div>):(<div></div>)}
+                    <Table hover borderless className={"text-center"}>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Имя</th>
+                                <th>Фамилия</th>
+                                <th>Почта</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        {this.renderUsers(this.state.users)}
+                        </tbody>
+                    </Table>
+                </div>):(<div><h2>Loading TODO</h2></div>)}
+                </Container>
             </div>
 
         );
