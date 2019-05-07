@@ -4,8 +4,8 @@
     height: 32px;
     line-height: 32px;
     padding: 0 1%;
-    background-color: #ffffff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.49);
+    background-color: #eaeaea;
+    //box-shadow: 0 0 5px rgba(0, 0, 0, 0.49);
     font-size: medium;
     position: fixed;
     z-index: 10;

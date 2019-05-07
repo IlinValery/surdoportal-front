@@ -10,7 +10,6 @@ export default class ProfileInList extends React.Component {
 
         this.state={
             modal: false
-
         }
         this.getDialog = this.getDialog.bind(this);
 
@@ -25,6 +24,29 @@ export default class ProfileInList extends React.Component {
     }
 
     deleteUser(){
+        fetch('/api/user/delete/'+this.props.user.iduser, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({'usertoken':localStorage.getItem('usertoken')})
+        })
+            .then( (response) => {
+                if (response.status !== 200) {
+                    console.log('Looks like there was a problem. Status Code: ' +
+                        response.status);
+                    return;
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log('data:', data);
+            })
+            .catch((err) => {
+                console.log('Fetch Error:', err);
+            });
+
         window.location.reload()
     }
 
@@ -39,9 +61,10 @@ export default class ProfileInList extends React.Component {
             <tr>
                 <th scope="row">{this.props.user.iduser}</th>
                 <td>{this.props.user.first_name}</td>
-                <td>{this.props.user.second_name}</td>
+                <td>{this.props.user.last_name}</td>
                 <td>{this.props.user.email}</td>
-                <td className={"text-left"} style={{width: "auto"}}>
+                <td>{this.props.user.is_superuser? (<FontAwesomeIcon icon="check" color={"green"} title={"Администратор в системе"}/>):(<FontAwesomeIcon icon="times" color={"red"} title={"Сурдопереводчик"}/>)}</td>
+                <td className={"text-center"} style={{width: "auto"}}>
                     <Button color="primary" outline size="sm"
                             style={{marginRight: "8px",}}
                             onClick={()=>{window.location.href = ('/profile/edit/'+this.props.user.iduser)}}
@@ -57,10 +80,10 @@ export default class ProfileInList extends React.Component {
                 <Modal isOpen={this.state.modal} toggle={this.getDialog} className={this.props.className}>
                     <ModalHeader toggle={this.toggle}>Подтвердите действие</ModalHeader>
                     <ModalBody>
-                        Вы действительно хотите удалить пользователя<br/>({this.props.user.first_name} {this.props.user.second_name})
+                        Вы действительно хотите удалить пользователя<br/>({this.props.user.first_name} {this.props.user.last_name})
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="danger" onClick={this.deleteUser}>Удалить</Button>{' '}
+                        <Button color="danger" onClick={()=>{this.deleteUser()}}>Удалить</Button>{' '}
                         <Button color="primary" onClick={this.getDialog}>Отмена</Button>
                     </ModalFooter>
                 </Modal>

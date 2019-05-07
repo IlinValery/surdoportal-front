@@ -25,7 +25,7 @@ export default class NavBar extends React.Component {
             isOpen: false,
             isLogined: false,
             first_name: '',
-            second_name: '',
+            last_name: '',
             isSuperuser: false,
         };
     }
@@ -77,7 +77,7 @@ export default class NavBar extends React.Component {
                                     </DropdownToggle>
                                     <DropdownMenu right>
                                         <DropdownItem onClick={() => {window.location.href = '/profile/me'}}>
-                                            Профиль {this.state.first_name} {this.state.second_name}
+                                            Профиль {this.state.first_name} {this.state.last_name}
                                         </DropdownItem>
 
                                         <DropdownItem disabled onClick={() => {window.location.href = '/terms/edit'}}>
@@ -128,7 +128,7 @@ export default class NavBar extends React.Component {
             const decoded = jwt_decode(token);
             this.setState({
                 first_name: decoded.identity.first_name,
-                second_name: decoded.identity.second_name,
+                last_name: decoded.identity.last_name,
                 isSuperuser: decoded.identity.is_superuser===1,
 
             })

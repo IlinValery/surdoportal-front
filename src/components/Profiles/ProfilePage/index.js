@@ -14,7 +14,7 @@ class ProfilePage extends React.Component {
         this.state={
             isLoggedIn: false,
             first_name: "",
-            second_name: "",
+            last_name: "",
             email: "",
             is_superuser: null
 
@@ -29,7 +29,7 @@ class ProfilePage extends React.Component {
             const decoded = jwt_decode(token);
             this.setState({
                 first_name: decoded.identity.first_name,
-                second_name: decoded.identity.second_name,
+                last_name: decoded.identity.last_name,
                 email: decoded.identity.email,
                 is_superuser: decoded.identity.is_superuser,
             })
@@ -48,7 +48,7 @@ class ProfilePage extends React.Component {
                             <Jumbotron>
                             {this.state.isLoggedIn?(<div>
                                 <h1 className={"text-left"}>Личная страница профиля</h1>
-                                <h3>Пользователь: <u>{this.state.first_name} {this.state.second_name}</u></h3>
+                                <h3>Пользователь: <u>{this.state.first_name} {this.state.last_name}</u></h3>
                                 <h3>Электронная почта: <a href={"mailto:"+ this.state.email}>{this.state.email}</a></h3>
                                 <h3>Статус в системе: {this.state.is_superuser? ("администратор системы"): ("сурдопереводчик")}.</h3>
                             </div>): (

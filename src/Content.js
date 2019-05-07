@@ -8,7 +8,8 @@ import TermsPublicPage from "./components/TermsPublicPage";
 import ProfilesPage from "./components/Profiles/ProfilesPage";
 import Page404 from "./components/404Page";
 import jwt_decode from "jwt-decode";
-import ProfileCreateEditPage from "./components/Profiles/ProfileCreateEditPage";
+import ProfileCreatePage from "./components/Profiles/ProfileCreatePage";
+import ProfileEditPage from "./components/Profiles/ProfileEditPage";
 
 
 class Content extends React.Component {
@@ -54,8 +55,8 @@ class Content extends React.Component {
 
                                 {this.state.isSuperuser ? (<Switch>
                                     <Route exact path='/profile/all' component={ProfilesPage}/>
-                                    <Route exact path='/profile/new' component={ProfileCreateEditPage}/>
-                                    <Route exact path='/profile/edit/:number' component={ProfileCreateEditPage}/>
+                                    <Route exact path='/profile/new' component={ProfileCreatePage}/>
+                                    <Route exact path='/profile/edit/:number' component={ProfileEditPage}/>
 
                                     {/*Здесь все, что доступно только суперпользователю системы*/}
                                 </Switch>) : (<Route exact path='*' component={Page404} status={"permissions"}/>)}

@@ -6,6 +6,7 @@ import ProfileInList from "./ProfileInList";
 import Row from "reactstrap/es/Row";
 import Col from "reactstrap/es/Col";
 import Button from "reactstrap/es/Button";
+import LoadingMessage from "../../Common/LoadingMessage";
 
 //window.location.replace('/profile/new')
 
@@ -42,7 +43,8 @@ export default class ProfilesPage extends React.Component {
                                 <th>Имя</th>
                                 <th>Фамилия</th>
                                 <th>Почта</th>
-                                <th className={"text-left"}>Действие</th>
+                                <th>Админ</th>
+                                <th>Действие</th>
                             </tr>
                         </thead>
 
@@ -59,14 +61,7 @@ export default class ProfilesPage extends React.Component {
                         </Col>
                         <Col/>
                     </Row>
-                </div>):(
-                    <div className={"text-center"} style={{marginTop: "32px"}}>
-                        <h2 >Загрузка списка пользователей</h2>
-                        <div className="spinner-border text-primary" role="status" style={{width: "5rem", height: "5rem"}} >
-                            <span className="sr-only">Loading...</span>
-                        </div>
-                    </div>
-                )}
+                </div>):(<LoadingMessage message={"Загрузка списка пользователей"}/>)}
                 </Container>
             </div>
 
