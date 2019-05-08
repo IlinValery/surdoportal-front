@@ -3,7 +3,7 @@ import {Route, Switch} from 'react-router-dom'
 
 import HomePage from './components/HomePage'
 import LoginPage from './components/LoginPage'
-import ProfilePage from "./components/Profiles/ProfilePage";
+import ProfilePage from "./components/Profiles/MyProfilePage";
 import TermsPublicPage from "./components/TermsPublicPage";
 import ProfilesPage from "./components/Profiles/ProfilesPage";
 import Page404 from "./components/404Page";

@@ -5,6 +5,8 @@ import {Jumbotron} from "reactstrap";
 import Container from "reactstrap/es/Container";
 import Row from "reactstrap/es/Row";
 import Col from "reactstrap/es/Col";
+import Button from "reactstrap/es/Button";
+import ProfileChangePasswordForm from "../ProfileChangePasswordForm";
 
 class ProfilePage extends React.Component {
 
@@ -12,6 +14,7 @@ class ProfilePage extends React.Component {
         super(props);
 
         this.state={
+            userID: 0,
             isLoggedIn: false,
             first_name: "",
             last_name: "",
@@ -28,6 +31,7 @@ class ProfilePage extends React.Component {
             this.setState({isLoggedIn : true})
             const decoded = jwt_decode(token);
             this.setState({
+                userID: decoded.identity.id,
                 first_name: decoded.identity.first_name,
                 last_name: decoded.identity.last_name,
                 email: decoded.identity.email,
@@ -51,6 +55,10 @@ class ProfilePage extends React.Component {
                                 <h3>Пользователь: <u>{this.state.first_name} {this.state.last_name}</u></h3>
                                 <h3>Электронная почта: <a href={"mailto:"+ this.state.email}>{this.state.email}</a></h3>
                                 <h3>Статус в системе: {this.state.is_superuser? ("администратор системы"): ("сурдопереводчик")}.</h3>
+                                <Button outline color="danger" id="password_change" style={{ marginBottom: '1rem' }}>
+                                    Изменить пароль
+                                </Button>
+                                <ProfileChangePasswordForm userID={this.state.userID} btn_position={"left"} next={"/profile/me"}/>
                             </div>): (
                                 <div>
                                     <h1>Для получения доступа требуется авторизация</h1>

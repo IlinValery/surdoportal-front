@@ -10,9 +10,8 @@ export default class ProfileInList extends React.Component {
 
         this.state={
             modal: false
-        }
+        };
         this.getDialog = this.getDialog.bind(this);
-
     }
 
     componentDidMount() {
@@ -24,13 +23,13 @@ export default class ProfileInList extends React.Component {
     }
 
     deleteUser(){
-        fetch('/api/user/delete/'+this.props.user.iduser, {
+        fetch('/api/user/delete', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({'usertoken':localStorage.getItem('usertoken')})
+            body: JSON.stringify({'usertoken':localStorage.getItem('usertoken'), 'user_id':this.props.user.iduser})
         })
             .then( (response) => {
                 if (response.status !== 200) {
@@ -59,10 +58,9 @@ export default class ProfileInList extends React.Component {
     render() {
         return (
             <tr>
-                <th scope="row">{this.props.user.iduser}</th>
+                <th scope="row"><a href={'mailto:'+this.props.user.email}>{this.props.user.email}</a></th>
                 <td>{this.props.user.first_name}</td>
                 <td>{this.props.user.last_name}</td>
-                <td>{this.props.user.email}</td>
                 <td>{this.props.user.is_superuser? (<FontAwesomeIcon icon="check" color={"green"} title={"Администратор в системе"}/>):(<FontAwesomeIcon icon="times" color={"red"} title={"Сурдопереводчик"}/>)}</td>
                 <td className={"text-center"} style={{width: "auto"}}>
                     <Button color="primary" outline size="sm"

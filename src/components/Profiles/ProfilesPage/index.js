@@ -39,10 +39,9 @@ export default class ProfilesPage extends React.Component {
                     <Table hover borderless className={"text-center"}>
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>Почта</th>
                                 <th>Имя</th>
                                 <th>Фамилия</th>
-                                <th>Почта</th>
                                 <th>Админ</th>
                                 <th>Действие</th>
                             </tr>
