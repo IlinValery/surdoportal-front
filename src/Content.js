@@ -57,7 +57,7 @@ class Content extends React.Component {
                                     <Route exact path='/profile/all' component={ProfilesPage}/>
                                     <Route exact path='/profile/new' component={ProfileCreatePage}/>
                                     <Route exact path='/profile/edit/:number' component={ProfileEditPage}/>
-
+                                    <Route exact path='*' component={Page404} status={"permissions"}/>
                                     {/*Здесь все, что доступно только суперпользователю системы*/}
                                 </Switch>) : (<Route exact path='*' component={Page404} status={"permissions"}/>)}
                             </Switch>

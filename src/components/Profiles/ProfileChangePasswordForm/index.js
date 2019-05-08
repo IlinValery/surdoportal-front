@@ -8,6 +8,7 @@ import Label from "reactstrap/es/Label";
 import Input from "reactstrap/es/Input";
 import FormFeedback from "reactstrap/es/FormFeedback";
 import Button from "reactstrap/es/Button";
+import Fade from "reactstrap/es/Fade";
 
 export default class ProfileChangePasswordForm extends React.Component {
 
@@ -20,7 +21,7 @@ export default class ProfileChangePasswordForm extends React.Component {
             confirm_password: "",
             passwordValidated: false,
             passwordWasChanged: false,
-            serverEditStatus: -1
+            passwordChangeStatus: -1
         }
 
         this.changePassword = this.changePassword.bind(this);
@@ -70,8 +71,49 @@ export default class ProfileChangePasswordForm extends React.Component {
         })
     }
 
+    setToSuccess(){
+        this.setState({passwordChangeStatus: 0});
+        return new Promise(function(resolve, reject) {
+            setTimeout(function(){
+                resolve(100);
+            }, 3000)
+        });
+    }
+
     changePasswordButton(){
-        console.log("change_password for", this.state.currentUser)
+        fetch('/api/user/edit_password', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'usertoken':localStorage.getItem('usertoken'),
+                'id':this.state.currentUser,
+                'password':this.state.password,
+            })
+        })
+            .then( (response) => {
+                if (response.status !== 200) {
+                    console.log('Looks like there was a problem. Status Code: ' +
+                        response.status);
+                    return;
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.result.code===1){
+                    this.setState({passwordChangeStatus: 1})
+                } else {
+                    console.log("успех!")
+                    this.setToSuccess().then(()=>{
+                        window.location.href = this.props.next;
+                    })
+                }
+            })
+            .catch((err) => {
+                console.log('Fetch Error:', err);
+            });
     }
 
 
@@ -108,6 +150,11 @@ export default class ProfileChangePasswordForm extends React.Component {
                                 {...(this.state.passwordWasChanged && this.state.passwordValidated) ? {}: {disabled: true}}
                                 onClick={()=>this.changePasswordButton()}>Сохранить пароль</Button>
                     </Col>
+                    <Fade in={this.state.passwordChangeStatus>=0} tag="h6" className={"text-center"}
+                          style={{color: this.state.passwordChangeStatus===1? "#ff6347":"#17891d", marginTop: "16px"}}>
+                        {this.state.passwordChangeStatus===1? ("Ошибка сервера. Обратитесь к разработчику"):
+                            ("Пароль пользователя был успешно изменен")}
+                    </Fade>
                 </UncontrolledCollapse>
             </div>
 

@@ -15,6 +15,7 @@ import CustomInput from "reactstrap/es/CustomInput";
 import InputGroup from "reactstrap/es/InputGroup";
 import InputGroupAddon from "reactstrap/es/InputGroupAddon";
 import ProfileChangePasswordForm from "../ProfileChangePasswordForm";
+import Fade from "reactstrap/es/Fade";
 
 export default class ProfileEditPage extends React.Component {
 
@@ -84,6 +85,7 @@ export default class ProfileEditPage extends React.Component {
             }, 200)
         });
     }
+
     changeFields(e){
         this.setFieldsToState(e).then(()=>
         {
@@ -119,9 +121,53 @@ export default class ProfileEditPage extends React.Component {
         })
     }
 
-    changeUserInfo(){
-        console.log(this.state)
+    setToSuccess(){
+        this.setState({serverEditStatus: 0});
+        return new Promise(function(resolve, reject) {
+            setTimeout(function(){
+                resolve(100);
+            }, 3000)
+        });
     }
+
+    changeUserInfo(){
+        fetch('/api/user/edit_fields', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'usertoken':localStorage.getItem('usertoken'),
+                'id':this.state.userID,
+                'email':this.state.email,
+                'first_name':this.state.first_name,
+                'last_name':this.state.last_name,
+                'is_superuser':this.state.is_superuser? 1:0,
+            })
+        })
+            .then( (response) => {
+                if (response.status !== 200) {
+                    console.log('Looks like there was a problem. Status Code: ' +
+                        response.status);
+                    return;
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.result.code===1){
+                    this.setState({serverEditStatus: 1})
+                } else {
+                    this.setToSuccess().then(()=>{
+                        window.location.href = '/profile/all'
+                    })
+                }
+            })
+            .catch((err) => {
+                console.log('Fetch Error:', err);
+            });
+    }
+
     render() {
         return (
             <div>
@@ -168,7 +214,7 @@ export default class ProfileEditPage extends React.Component {
 
                                         </InputGroup>
 
-                                        <ProfileChangePasswordForm userID={this.state.userInfo.iduser} btn_position={"right"}/>
+                                        <ProfileChangePasswordForm userID={this.state.userInfo.iduser} btn_position={"right"} next={"/profile/all"}/>
                                             <FormGroup check style={{paddingLeft:0}}>
                                                 <Label check >
                                                     <CustomInput defaultChecked={this.state.userInfo.is_superuser}
@@ -186,6 +232,12 @@ export default class ProfileEditPage extends React.Component {
                                             {...(this.state.fieldsValidated && this.state.emailValidated) ? {}: {disabled: true}}
                                             onClick={()=>this.changeUserInfo()}>Сохранить изменения</Button>
                                 </div>
+                                <Fade in={this.state.serverEditStatus>=0} tag="h6" className={"text-center"}
+                                      style={{color: this.state.serverEditStatus===1? "#ff6347":"#17891d", marginTop: "16px"}}>
+                                    {this.state.serverEditStatus===1? ("Ошибка сервера. Пользователь c таким поле email уже существует"):
+                                        ("Пользователь был успешно изменен! Сейчас Вас перенаправят на предыдущую страницу")}
+                                </Fade>
+
                             </Jumbotron>
                         </Container>
 
@@ -214,8 +266,7 @@ export default class ProfileEditPage extends React.Component {
                         email: data.data.email,
                         is_superuser: data.data.is_superuser,
                         contentLoaded: true
-                    })
-                    console.log(data)
+                    });
                 }).then(()=>this.verifyFields())
                 .catch((err) => {
                     console.log('Fetch Error:', err);

@@ -118,7 +118,6 @@ export default class ProfileCreatePage extends React.Component {
                 } else {
                     window.location.href = '/profile/all'
                 }
-                //console.log(data.result)
             })
             .catch((err) => {
                 console.log('Fetch Error:', err);
