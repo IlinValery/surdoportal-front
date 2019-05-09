@@ -100,7 +100,7 @@ export default class NavBar extends React.Component {
                                                     Управление преподавателями
                                                 </DropdownItem>
                                                 <DropdownItem divider />
-                                                <DropdownItem disabled>
+                                                <DropdownItem onClick={() => {window.location.href ='/admin/logs'}}>
                                                     Журнал действий
                                                 </DropdownItem>
                                             </div>

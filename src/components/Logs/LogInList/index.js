@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css'
 
-export default class Component extends React.Component {
+export default class LogInList extends React.Component {
 
     constructor(props){
         super(props);
@@ -20,6 +20,7 @@ export default class Component extends React.Component {
         //fonts for journal: plus, minus, pen: create-delete-edit
         return (
             <div>
+
             </div>
 
         );
