@@ -13,6 +13,7 @@ export default class LogsTable extends React.Component {
         this.state={
             logs: null,
             currentLoggedInUser: 0,
+            dataLoaded: false
 
         }
 
@@ -55,8 +56,7 @@ export default class LogsTable extends React.Component {
             }
             return response.json();
         }).then((data) => {
-            console.log(data);
-            this.setState({logs: data.data})
+            this.setState({logs: data.data, dataLoaded: true})
         }).catch((err) => {
             console.log('Fetch Error:', err);
         });
@@ -64,7 +64,6 @@ export default class LogsTable extends React.Component {
 
 
     renderLogs(logs){
-        console.log(logs)
         const userItems = [];
         for (let i=0; i < logs.length; i++) {
             userItems.push(<LogInList key={logs[i].idlog} log={logs[i]}/>);
@@ -75,7 +74,7 @@ export default class LogsTable extends React.Component {
     render() {
         return (
             <div>
-                {this.state.logs? (<div>
+                {this.state.dataLoaded? (<div>
                         <Table hover borderless className={"text-center"}>
                             <thead>
                             <tr>
