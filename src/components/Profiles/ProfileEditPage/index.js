@@ -16,6 +16,8 @@ import InputGroup from "reactstrap/es/InputGroup";
 import InputGroupAddon from "reactstrap/es/InputGroupAddon";
 import ProfileChangePasswordForm from "../ProfileChangePasswordForm";
 import Fade from "reactstrap/es/Fade";
+import jwt_decode from "jwt-decode";
+import UncontrolledAlert from "reactstrap/es/UncontrolledAlert";
 
 export default class ProfileEditPage extends React.Component {
 
@@ -37,7 +39,8 @@ export default class ProfileEditPage extends React.Component {
             passwordWasChanged: false,
             is_superuser: false,
             accessCreate: false,
-            serverEditStatus: -1
+            serverEditStatus: -1,
+            currentLoggedInUser: 0
         }
 
         this.changeFields = this.changeFields.bind(this);
@@ -176,6 +179,7 @@ export default class ProfileEditPage extends React.Component {
                     <div>
                         <Container>
                             <Jumbotron>
+                                {(this.state.userID===this.state.currentLoggedInUser)? (<UncontrolledAlert color={"danger"}>Редактирование собственного аккаунта ограничено</UncontrolledAlert>):(<div></div>)}
                                 <Form>
                                     <Row>
                                         <Col>
@@ -215,16 +219,17 @@ export default class ProfileEditPage extends React.Component {
                                         </InputGroup>
 
                                         <ProfileChangePasswordForm userID={this.state.userInfo.iduser} btn_position={"right"} next={"/profile/all"}/>
-                                            <FormGroup check style={{paddingLeft:0}}>
-                                                <Label check >
-                                                    <CustomInput defaultChecked={this.state.userInfo.is_superuser}
-                                                                 type="switch"
-                                                                 id="exampleCustomSwitch" name="customSwitch"
-                                                                 onClick={this.changeSuperuserField}
-                                                                 label="Администратор в системе" />
+                                        {(this.state.userID===this.state.currentLoggedInUser)? (<div></div>):(
+                                        <FormGroup check style={{paddingLeft:0}}>
+                                            <Label check >
+                                                <CustomInput defaultChecked={this.state.userInfo.is_superuser}
+                                                             type="switch"
+                                                             id="exampleCustomSwitch" name="customSwitch"
+                                                             onClick={this.changeSuperuserField}
+                                                             label="Администратор в системе" />
 
-                                                </Label>
-                                            </FormGroup>
+                                            </Label>
+                                        </FormGroup>)}
                                     </Jumbotron>
                                 </Form>
                                 <div className={"text-center"}>
@@ -248,9 +253,9 @@ export default class ProfileEditPage extends React.Component {
     }
 
     componentDidMount() {
-        if (this.state.isFromForEdit){
-            fetch('/api/user/'+this.state.userID)
-                .then( (response) => {
+        if (this.state.isFromForEdit) {
+            fetch('/api/user/' + this.state.userID)
+                .then((response) => {
                     if (response.status !== 200) {
                         console.log('Looks like there was a problem. Status Code: ' +
                             response.status);
@@ -267,12 +272,19 @@ export default class ProfileEditPage extends React.Component {
                         is_superuser: data.data.is_superuser,
                         contentLoaded: true
                     });
-                }).then(()=>this.verifyFields())
+                }).then(() => this.verifyFields())
                 .catch((err) => {
                     console.log('Fetch Error:', err);
                 });
 
         }
-    }
 
+        const token = localStorage.getItem('usertoken');
+        if (token) {
+            const decoded = jwt_decode(token);
+            this.setState({
+                currentLoggedInUser: +decoded.identity.id
+            });
+        }
+    }
 }

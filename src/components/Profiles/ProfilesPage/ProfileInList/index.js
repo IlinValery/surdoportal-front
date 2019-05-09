@@ -2,6 +2,7 @@ import React from 'react';
 import './style.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import jwt_decode from "jwt-decode";
 
 export default class ProfileInList extends React.Component {
 
@@ -9,12 +10,22 @@ export default class ProfileInList extends React.Component {
         super(props);
 
         this.state={
-            modal: false
+            modal: false,
+            curUserIsLoggedIn: false
         };
         this.getDialog = this.getDialog.bind(this);
     }
 
     componentDidMount() {
+        const token = localStorage.getItem('usertoken');
+        if (token){
+            const decoded = jwt_decode(token);
+            if (this.props.user.iduser=== +decoded.identity.id){
+                this.setState({curUserIsLoggedIn: true})
+            } else {
+                this.setState({curUserIsLoggedIn: false})
+            }
+        }
 
     }
 
@@ -71,6 +82,7 @@ export default class ProfileInList extends React.Component {
                     </Button>
                     <Button color="danger" outline size="sm"
                             onClick={() => this.getDialog()}
+                            {...this.state.curUserIsLoggedIn? {disabled: true}: {}}
                             title={"Удалить пользователя "+this.props.user.email}>
                         <FontAwesomeIcon icon="trash"/>
                     </Button>
