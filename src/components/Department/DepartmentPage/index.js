@@ -6,6 +6,8 @@ import Row from "reactstrap/es/Row";
 import Col from "reactstrap/es/Col";
 import Button from "reactstrap/es/Button";
 import LoadingMessage from "../../Common/LoadingMessage";
+import DepartmentModalCreate from "../DepartmentModalCreate";
+import DepartmentInTable from "../DepartmentInTable";
 
 export default class DepartmentPage extends React.Component {
 
@@ -15,21 +17,26 @@ export default class DepartmentPage extends React.Component {
         this.state = {
             departmentsLoaded: false,
             departments: [],
-            dapartmentCreate: false,
+            departmentCreate: false,
         }
-        this.addDepartmentToogle = this.addDepartmentToogle.bind(this)
+        this.addDepartmentToggle = this.addDepartmentToggle.bind(this)
+        this.renderedDepartments = []
     }
 
     renderDepartments(array) {
-        console.log(array)
+        const departmentItems = [];
+        for (let i=0; i < array.length; i++) {
+            departmentItems.push(<DepartmentInTable key={array[i].iddepartment} department={array[i]}/>);
+        }
+        return  departmentItems;
     }
 
-    addDepartmentToogle() {
+    addDepartmentToggle() {
         this.setState({
-            dapartmentCreate: !this.state.dapartmentCreate,
+            departmentCreate: !this.state.departmentCreate,
         })
-        console.log("create!")
     }
+
 
     render() {
         return (
@@ -53,7 +60,7 @@ export default class DepartmentPage extends React.Component {
                         <Row>
                             <Col/>
                             <Col className={"text-center"}>
-                                <Button color={"primary"} onClick={this.addDepartmentToogle}>
+                                <Button color={"primary"} onClick={this.addDepartmentToggle}>
                                     Добавить кафедру
                                 </Button>
                             </Col>
@@ -61,6 +68,7 @@ export default class DepartmentPage extends React.Component {
                         </Row>
                     </div>) : (<LoadingMessage message={"Загрузка списка кафедр"}/>)}
                 </Container>
+                <DepartmentModalCreate is_open={this.state.departmentCreate}/>
             </div>
 
         );
@@ -68,6 +76,24 @@ export default class DepartmentPage extends React.Component {
 
 
     componentDidMount() {
+        fetch('/api/department/all')
+            .then( (response) => {
+                if (response.status !== 200) {
+                    console.log('Looks like there was a problem. Status Code: ' +
+                        response.status);
+                    return;
+                }
+                return response.json();
+            })
+            .then((data) => {
+                this.setState({
+                    departmentsLoaded: true,
+                    departments: data.data
+                })
+            })
+            .catch((err) => {
+                console.log('Fetch Error:', err);
+            });
 
     }
 }

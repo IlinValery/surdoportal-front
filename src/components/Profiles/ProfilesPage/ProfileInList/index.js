@@ -29,10 +29,6 @@ export default class ProfileInList extends React.Component {
 
     }
 
-    editUser(){
-        console.log(this.props.email)
-    }
-
     deleteUser(){
         fetch('/api/user/delete', {
             method: 'POST',

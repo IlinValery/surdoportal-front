@@ -156,6 +156,12 @@ export default class LogInList extends React.Component {
                                 elementInfo: user,
                                 isLoadedElement: true
                             })
+                        } else  if (this.props.log.table==="department") {
+                            let department = {initials: data.data.initials};
+                            this.setState({
+                                elementInfo: department,
+                                isLoadedElement: true
+                            })
                         }
                     }
                 })
