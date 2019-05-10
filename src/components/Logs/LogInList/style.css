@@ -1,0 +1,6 @@
+.is-auth-user{
+    background-color: #ede3ff;
+}
+.is-auth-user:hover{
+    background-color: #cfc9ff !important;
+}

@@ -38,6 +38,7 @@ export default class LogsTable extends React.Component {
             link = '/api/log/read_by_user';
             //this.state.currentLoggedInUser+ +this.props.max_count
         }
+        console.log(link)
         fetch(link, {
             method: 'POST',
             headers: {
@@ -66,7 +67,7 @@ export default class LogsTable extends React.Component {
     renderLogs(logs){
         const userItems = [];
         for (let i=0; i < logs.length; i++) {
-            userItems.push(<LogInList key={logs[i].idlog} log={logs[i]}/>);
+            userItems.push(<LogInList key={logs[i].idlog} log={logs[i]} admin={this.props.admin}/>);
         }
         return userItems;
 
@@ -82,7 +83,7 @@ export default class LogsTable extends React.Component {
                                 <th>Дата</th>
                                 <th>Таблица</th>
                                 <th>Элемент</th>
-                                <th>Пользователь</th>
+                                {this.props.admin? (<th>Пользователь</th>):(<></>)}
                                 <th>Действие</th>
                             </tr>
                             </thead>

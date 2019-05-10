@@ -7,6 +7,7 @@ import Row from "reactstrap/es/Row";
 import Col from "reactstrap/es/Col";
 import Button from "reactstrap/es/Button";
 import ProfileChangePasswordForm from "../ProfileChangePasswordForm";
+import LogsTable from "../../Logs/LogsTable";
 
 class ProfilePage extends React.Component {
 
@@ -64,6 +65,8 @@ class ProfilePage extends React.Component {
                                     <h1>Для получения доступа требуется авторизация</h1>
                                 </div>)}
                             </Jumbotron>
+                            <h2>Ваши последние действия</h2>
+                            <LogsTable admin={false} max_count={10}/>
                         </Col>
                     </Row>
                 </Container>

@@ -22,8 +22,8 @@ export default class LogsPage extends React.Component {
         return (
             <div>
                 <Container>
-                    <h1 className={"text-center"}>Журнал действий</h1>
-                    <LogsTable admin={true} max_count={40}/>
+                    <h1 className={"text-center"}>Журнал последних действий</h1>
+                    <LogsTable admin={true} max_count={20}/>
                 </Container>
             </div>
 
