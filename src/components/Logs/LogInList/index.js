@@ -90,8 +90,8 @@ export default class LogInList extends React.Component {
                 <th scope="row">{this.props.log.idlog}</th>
                 <td>{this.props.log.date_time}</td>
                 <td>{this.returnTableName(this.props.log.table)}</td>
-                <td><Button id={this.state.popoverElementId} color={"link"} onClick={()=>this.tooglePopoverElement()}>{this.props.log.element}</Button></td>
-                <td {...this.props.admin? {}:{style: {display: "none"}}}><Button id={this.state.popoverUserId} color={"link"} onClick={()=>this.tooglePopoverUser()}>{this.props.log.user}</Button></td>
+                <td><Button id={this.state.popoverElementId} color={"link"} onClick={()=>this.tooglePopoverElement()} style={{paddingTop:0,paddingBottom:0}}>{this.props.log.element}</Button></td>
+                <td {...this.props.admin? {}:{style: {display: "none"}}}><Button id={this.state.popoverUserId} color={"link"} onClick={()=>this.tooglePopoverUser()} style={{paddingTop:0,paddingBottom:0}}>{this.props.log.user}</Button></td>
                 <td>{this.returnAction(this.props.log.action)}</td>
                 <Popover trigger="legacy" isOpen={this.state.popoverElementOpen} target={this.state.popoverElementId} placement="bottom">
                     {this.state.isLoadedElement? (<PopoverBody>{this.returnElementInfo(this.state.elementInfo)}</PopoverBody>):(<PopoverBody>Вероятно объект удален</PopoverBody>)}

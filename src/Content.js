@@ -11,6 +11,7 @@ import jwt_decode from "jwt-decode";
 import ProfileCreatePage from "./components/Profiles/ProfileCreatePage";
 import ProfileEditPage from "./components/Profiles/ProfileEditPage";
 import LogsPage from "./components/Logs/LogsPage";
+import DepartmentPage from "./components/Department/DepartmentPage";
 
 
 class Content extends React.Component {
@@ -58,8 +59,13 @@ class Content extends React.Component {
                                     <Route exact path='/profile/all' component={ProfilesPage}/>
                                     <Route exact path='/profile/new' component={ProfileCreatePage}/>
                                     <Route exact path='/profile/edit/:number' component={ProfileEditPage}/>
+
                                     <Route exact path='/admin/logs' component={LogsPage}/>
+
+                                    <Route exact path='/admin/departments' component={DepartmentPage}/>
+
                                     <Route exact path='*' component={Page404} status={"permissions"}/>
+
                                     {/*Здесь все, что доступно только суперпользователю системы*/}
                                 </Switch>) : (<Route exact path='*' component={Page404} status={"permissions"}/>)}
                             </Switch>
