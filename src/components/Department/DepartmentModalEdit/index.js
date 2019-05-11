@@ -22,7 +22,8 @@ export default class DepartmentModalEdit extends React.Component {
             isOpened: false,
             initials: "",
             caption: "",
-            allowCreate: false
+            allowCreate: false,
+            hasChanged: false
 
         };
 
@@ -46,7 +47,7 @@ export default class DepartmentModalEdit extends React.Component {
         });
     }
     verifyFields(){
-        if (this.isEmptyField(this.state.initials) || this.isEmptyField(this.state.caption)) {
+        if (this.isEmptyField(this.state.initials) || this.isEmptyField(this.state.caption) || !this.state.hasChanged) {
             this.setState({
                 allowCreate: false
             })
@@ -68,6 +69,12 @@ export default class DepartmentModalEdit extends React.Component {
             this.setState({
                 isOpened: !!(this.state.isCloseHere^this.props.is_open)
             })
+        if ((prevProps.object.initials !== this.state.initials || prevProps.object.caption !== this.state.caption) && !this.state.hasChanged){
+            this.setState({
+                hasChanged: true
+            })
+        }
+
     }
 
     editObject(){
@@ -107,7 +114,7 @@ export default class DepartmentModalEdit extends React.Component {
     render() {
         return (
             <Modal isOpen={this.state.isOpened} style={{minWidth: "50%"}}>
-                <ModalHeader>Добавление новой кафедры</ModalHeader>
+                <ModalHeader>Изменение кафедры</ModalHeader>
                 <ModalBody>
                     <Form>
                         <FormGroup>
@@ -141,7 +148,7 @@ export default class DepartmentModalEdit extends React.Component {
                             onClick={this.editObject}>
                         Изменить
                     </Button>
-                    <Button {...(this.isEmptyField(this.state.initials)&&this.isEmptyField(this.state.caption))? {color: "secondary"}:{color: "danger"}}
+                    <Button {...this.state.hasChanged? {color: "danger"}:{color: "secondary"}}
                             onClick={this.toggleClose}>Закрыть окно</Button>
                 </ModalFooter>
             </Modal>
@@ -152,7 +159,7 @@ export default class DepartmentModalEdit extends React.Component {
     componentWillMount() {
         this.setState({
             initials: this.props.object.initials,
-            caption: this.props.object.initials,
+            caption: this.props.object.caption,
         })
     }
 

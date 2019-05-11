@@ -9,8 +9,10 @@ import Form from "reactstrap/es/Form";
 import FormGroup from "reactstrap/es/FormGroup";
 import Label from "reactstrap/es/Label";
 import Input from "reactstrap/es/Input";
+import Row from "reactstrap/es/Row";
+import Col from "reactstrap/es/Col";
 
-export default class DepartmentModalCreate extends React.Component {
+export default class DisciplineModalCreate extends React.Component {
 
     constructor(props){
         super(props);
@@ -19,14 +21,15 @@ export default class DepartmentModalCreate extends React.Component {
             isOpenedOut: false,
             isCloseHere: false,
             isOpened: false,
-            initials: "",
-            caption: "",
+            name: "",
+            semester: "",
+            department_id: "",
             allowCreate: false
 
         };
 
         this.toggleClose = this.toggleClose.bind(this);
-        this.createDepartment = this.createDepartment.bind(this);
+        this.createObject = this.createObject.bind(this);
         this.changeField = this.changeField.bind(this);
     }
 
@@ -45,19 +48,20 @@ export default class DepartmentModalCreate extends React.Component {
         });
     }
 
+    verifyFields(){
+        if (this.isEmptyField(this.state.name) || this.isEmptyField(this.state.semester) || this.isEmptyField(this.state.department_id)) {
+            this.setState({
+                allowCreate: false
+            })
+        }
+        else {
+            this.setState({
+                allowCreate: true
+            })
+        }
+    }
     changeField(e){
-        this.setFieldsToState(e).then(()=>{
-            if (this.isEmptyField(this.state.initials) || this.isEmptyField(this.state.caption)) {
-                this.setState({
-                    allowCreate: false
-                })
-            }
-            else {
-                this.setState({
-                    allowCreate: true
-                })
-            }
-        })
+        this.setFieldsToState(e).then(()=>{this.verifyFields()})
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -67,8 +71,8 @@ export default class DepartmentModalCreate extends React.Component {
         })
     }
 
-    createDepartment(){
-        fetch('/api/department/create', {
+    createObject(table){
+        fetch('/api/'+table+'/create', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -76,8 +80,9 @@ export default class DepartmentModalCreate extends React.Component {
             },
             body: JSON.stringify({
                 'usertoken':localStorage.getItem('usertoken'),
-                'initials':this.state.initials,
-                'caption':this.state.caption,
+                'name':this.state.name,
+                'semester':this.state.semester,
+                'department_id':this.state.department_id,
             })
         })
             .then( (response) => {
@@ -98,42 +103,74 @@ export default class DepartmentModalCreate extends React.Component {
             .catch((err) => {
                 console.log('Fetch Error:', err);
             });
-        //this.setState({isCloseHere: !this.state.isCloseHere})
 
     }
-
+    renderDepartments(array) {
+        const objectsItems = [];
+        for (let i=0; i < array.length; i++) {
+            objectsItems.push(<option value={array[i].iddepartment} key={array[i].iddepartment}>{array[i].initials}</option>);
+        }
+        return  objectsItems;
+    }
     render() {
         return (
             <Modal isOpen={this.state.isOpened} style={{minWidth: "50%"}}>
-                <ModalHeader>Добавление новой кафедры</ModalHeader>
+                <ModalHeader>Добавление новой дисциплины</ModalHeader>
                 <ModalBody>
                     <Form>
                         <FormGroup>
-                            <Label for="initials">Короткое название</Label>
+                            <Label for="name">Название дисциплины</Label>
                             <Input
                                 type="text"
-                                name="initials"
-                                id="initials"
+                                name="name"
+                                id="name"
                                 onChange={this.changeField}
-                                placeholder="Инициалы"
+                                placeholder="Название предмета"
                             />
                         </FormGroup>
-                        <FormGroup>
-                            <Label for="caption">Длинное название</Label>
-                            <Input
-                                type="text"
-                                name="caption"
-                                id="caption"
-                                onChange={this.changeField}
-                                placeholder="Длинное название"
-                            />
-                        </FormGroup>
+                        <Row form>
+                            <Col md={5}>
+                                <FormGroup>
+                                    <Label for="semester">Номер семестра</Label>
+                                    <Input type="select"
+                                           name="semester"
+                                           onChange={this.changeField}
+                                           id="semester">
+                                        <option value="">Не выбрано</option>
+                                        <option value={1}>1</option>
+                                        <option value={2}>2</option>
+                                        <option value={3}>3</option>
+                                        <option value={4}>4</option>
+                                        <option value={5}>5</option>
+                                        <option value={6}>6</option>
+                                        <option value={7}>7</option>
+                                        <option value={8}>8</option>
+                                        <option value={9}>9</option>
+                                        <option value={10}>10</option>
+                                        <option value={11}>11</option>
+                                        <option value={12}>12</option>
+                                    </Input>
+                                </FormGroup>
+                            </Col>
+                            <Col>
+                                <FormGroup>
+                                    <Label for="department">Кафедра</Label>
+                                    <Input type="select"
+                                           name="department_id"
+                                           onChange={this.changeField}
+                                           id="department">
+                                        <option value="">Не выбрано</option>
+                                        {this.renderDepartments(this.props.departments)}
+                                    </Input>
+                                </FormGroup>
+                            </Col>
+                        </Row>
                     </Form>
                 </ModalBody>
                 <ModalFooter>
                     <Button color={"primary"}
                             {...this.state.allowCreate? {}:{disabled: true}}
-                            onClick={this.createDepartment}>
+                            onClick={()=>this.createObject('discipline')}>
                         Добавить
                     </Button>
                     <Button {...(this.isEmptyField(this.state.initials)&&this.isEmptyField(this.state.caption))? {color: "secondary"}:{color: "danger"}}

@@ -3,9 +3,9 @@ import './style.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Alert from "reactstrap/es/Alert";
-import DepartmentModalEdit from "../DepartmentModalEdit";
+import DisciplineModalEdit from "../DisciplineModalEdit";
 
-export default class DepartmentInTable extends React.Component {
+export default class DisciplineInTable extends React.Component {
 
     constructor(props){
         super(props);
@@ -13,7 +13,8 @@ export default class DepartmentInTable extends React.Component {
         this.state={
             modalEditOpen: false,
             modalDeleteOpen: false,
-            itemDeleteStatusBad: false
+            itemDeleteStatusBad: false,
+            objectDepartment: 0
         };
         this.getEditDialog = this.getEditDialog.bind(this);
         this.getDeleteDialog = this.getDeleteDialog.bind(this);
@@ -32,13 +33,16 @@ export default class DepartmentInTable extends React.Component {
 
     deleteItem(){
         console.log("delete item department:");
-        fetch('/api/department/delete', {
+        fetch('/api/discipline/delete', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({'usertoken':localStorage.getItem('usertoken'), 'department_id':this.props.department.iddepartment})
+            body: JSON.stringify({
+                'usertoken':localStorage.getItem('usertoken'),
+                'discipline_id':this.props.object.iddiscipline
+            })
         })
             .then( (response) => {
                 if (response.status !== 200) {
@@ -66,26 +70,27 @@ export default class DepartmentInTable extends React.Component {
     render() {
         return (
             <tr>
-                <th scope="row">{this.props.department.initials}</th>
-                <td>{this.props.department.caption}</td>
+                <th scope="row">{this.props.object.name}</th>
+                <td>{this.props.object.semester}</td>
+                <td>{this.state.objectDepartment.name}</td>
                 <td className={"text-center"} style={{width: "auto"}}>
                     <Button color="primary" outline size="sm"
                             style={{marginRight: "8px",}}
                             onClick={this.getEditDialog}
-                            title={"Редактировать кафедру "+this.props.department.initials}>
+                            title={"Редактировать дисциплину "+this.props.object.name}>
                         <FontAwesomeIcon icon="pen" />
                     </Button>
                     <Button color="danger" outline size="sm"
                             onClick={this.getDeleteDialog}
                             {...this.state.curUserIsLoggedIn? {disabled: true}: {}}
-                            title={"Удалить кафедру "+this.props.department.initials}>
+                            title={"Удалить дисциплину "+this.props.object.name}>
                         <FontAwesomeIcon icon="trash"/>
                     </Button>
                 </td>
                 <Modal isOpen={this.state.modalDeleteOpen} toggle={this.getDeleteDialog} style={{minWidth: "40%"}}>
                     <ModalHeader toggle={this.toggle}>Подтвердите действие</ModalHeader>
                     <ModalBody>
-                        Вы действительно хотите удалить кафедру {this.props.department.initials}?<br/>({this.props.department.caption})
+                        Вы действительно хотите удалить дисциплину {this.props.object.name}?
                     </ModalBody>
                     <ModalFooter>
                         {this.state.itemDeleteStatusBad? (<Alert color={"danger"}>Удаление не удалось, что-то пошло не так, обновите страницу</Alert>):(<></>)}
@@ -93,9 +98,17 @@ export default class DepartmentInTable extends React.Component {
                         <Button color="primary" onClick={this.getDeleteDialog}>Отмена</Button>
                     </ModalFooter>
                 </Modal>
-                <DepartmentModalEdit is_open={this.state.modalEditOpen} object={this.props.department}/>
+                <DisciplineModalEdit is_open={this.state.modalEditOpen} object={this.props.object} departments={this.props.departments}/>
             </tr>
 
         );
+    }
+    componentWillMount() {
+        let array = this.props.departments;
+        for (let i=0; i < array.length; i++) {
+            if (array[i].iddepartment===this.props.object.department_id){
+                this.setState({objectDepartment: {id:array[i].iddepartment, name:array[i].initials}})
+            }
+        }
     }
 }

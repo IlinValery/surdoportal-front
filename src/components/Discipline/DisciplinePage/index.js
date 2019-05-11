@@ -6,6 +6,8 @@ import Row from "reactstrap/es/Row";
 import Col from "reactstrap/es/Col";
 import Button from "reactstrap/es/Button";
 import LoadingMessage from "../../Common/LoadingMessage";
+import DisciplineModalCreate from "../DisciplineModalCreate";
+import DisciplineInTable from "../DisciplineInTable";
 
 export default class DisciplinePage extends React.Component {
 
@@ -26,7 +28,7 @@ export default class DisciplinePage extends React.Component {
     renderObjects(array) {
         const objectsItems = [];
         for (let i=0; i < array.length; i++) {
-            objectsItems.push(<div key={array[i].iddiscipline} object={array[i]}/>);
+            objectsItems.push(<DisciplineInTable key={array[i].iddiscipline} object={array[i]} departments={this.state.departments}/>);
         }
         return  objectsItems;
     }
@@ -43,14 +45,14 @@ export default class DisciplinePage extends React.Component {
             <div>
                 <Container>
                     <h1 className={"text-center"}>Дисциплины в системе</h1>
-                    {this.state.objectsLoaded ? (<div>
+                    {(this.state.objectsLoaded && this.state.departmentsLoaded)? (<div>
                         <Table hover borderless className={"text-center"}>
                             <thead>
                             <tr>
-                                <th>#</th>
                                 <th>Название</th>
                                 <th>Семестр</th>
                                 <th>Кафедра</th>
+                                <th>Действие</th>
                             </tr>
                             </thead>
 
@@ -69,7 +71,7 @@ export default class DisciplinePage extends React.Component {
                         </Row>
                     </div>) : (<LoadingMessage message={"Загрузка списка дисциплин"}/>)}
                 </Container>
-                <div is_open={this.state.objectCreate}/>
+                <DisciplineModalCreate is_open={this.state.objectCreate} departments={this.state.departments}/>
             </div>
 
         );
@@ -86,10 +88,10 @@ export default class DisciplinePage extends React.Component {
                 return response.json();
             })
             .then((data) => {
-                this.setState({
-                    departmentsLoaded: true,
-                    departments: data.data
-                })
+                    this.setState({
+                        departmentsLoaded: true,
+                        departments: data.data
+                    });
             })
             .catch((err) => {
                 console.log('Fetch Error:', err);
@@ -106,10 +108,10 @@ export default class DisciplinePage extends React.Component {
                 return response.json();
             })
             .then((data) => {
-                this.setState({
-                    objectsLoaded: true,
-                    objects: data.data
-                })
+                    this.setState({
+                        objectsLoaded: true,
+                        objects: data.data
+                    })
             })
             .catch((err) => {
                 console.log('Fetch Error:', err);
@@ -117,11 +119,10 @@ export default class DisciplinePage extends React.Component {
         return new Promise(function(resolve, reject) {
             setTimeout(function(){
                 resolve(100);
-            }, 3000)
+            }, 500)
         });
     }
     componentDidMount() {
         this.loadObects('discipline').then(()=>{this.loadDepartments()})
-
     }
 }

@@ -9,21 +9,23 @@ import Form from "reactstrap/es/Form";
 import FormGroup from "reactstrap/es/FormGroup";
 import Label from "reactstrap/es/Label";
 import Input from "reactstrap/es/Input";
+import Row from "reactstrap/es/Row";
+import Col from "reactstrap/es/Col";
 
-export default class DepartmentModalEdit extends React.Component {
+export default class DisciplineModalEdit extends React.Component {
 
     constructor(props){
         super(props);
 
         this.state={
-
             isOpenedOut: false,
             isCloseHere: false,
             isOpened: false,
-            initials: "",
-            caption: "",
-            allowCreate: false
-
+            name: this.props.name,
+            semester: this.props.semester,
+            department_id: this.props.department_id,
+            allowEdit: false,
+            hasChanged: false
         };
 
         this.toggleClose = this.toggleClose.bind(this);
@@ -35,7 +37,7 @@ export default class DepartmentModalEdit extends React.Component {
         this.setState({isCloseHere: !this.state.isCloseHere})
     }
 
-    isEmptyField = field => field === "";
+    isEmptyField = field => field === "" || field===undefined;
 
     setFieldsToState(e){
         this.setState({[e.target.name]: e.target.value});
@@ -46,14 +48,14 @@ export default class DepartmentModalEdit extends React.Component {
         });
     }
     verifyFields(){
-        if (this.isEmptyField(this.state.initials) || this.isEmptyField(this.state.caption)) {
+        if (this.isEmptyField(this.state.name) || this.isEmptyField(this.state.semester) || this.isEmptyField(this.state.department_id) || !this.state.hasChanged) {
             this.setState({
-                allowCreate: false
+                allowEdit: false
             })
         }
         else {
             this.setState({
-                allowCreate: true
+                allowEdit: true
             })
         }
     }
@@ -63,15 +65,30 @@ export default class DepartmentModalEdit extends React.Component {
         })
     }
 
+    renderDepartments(array) {
+        const objectsItems = [];
+
+        for (let i=0; i < array.length; i++) {
+            objectsItems.push(<option value={array[i].iddepartment} key={array[i].iddepartment}>{array[i].initials}</option>);
+        }
+        return  objectsItems;
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.is_open!==prevProps.is_open || this.state.isCloseHere!==prevState.isCloseHere)
             this.setState({
                 isOpened: !!(this.state.isCloseHere^this.props.is_open)
             })
+        if ((prevProps.object.name !== this.state.name || prevProps.object.department_id !== this.state.department_id || prevProps.object.department_id !== this.state.department_id) && !this.state.hasChanged){
+            this.setState({
+                hasChanged: true
+            })
+        }
+
     }
 
     editObject(){
-        fetch('/api/department/edit', {
+        fetch('/api/discipline/edit', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -79,9 +96,10 @@ export default class DepartmentModalEdit extends React.Component {
             },
             body: JSON.stringify({
                 'usertoken':localStorage.getItem('usertoken'),
-                'department_id': this.props.object.iddepartment,
-                'initials':this.state.initials,
-                'caption':this.state.caption,
+                'discipline_id':this.props.object.iddiscipline,
+                'name':this.state.name,
+                'semester':this.state.semester,
+                'department_id':this.state.department_id,
             })
         })
             .then( (response) => {
@@ -107,41 +125,69 @@ export default class DepartmentModalEdit extends React.Component {
     render() {
         return (
             <Modal isOpen={this.state.isOpened} style={{minWidth: "50%"}}>
-                <ModalHeader>Добавление новой кафедры</ModalHeader>
+                <ModalHeader>Изменение дисциплины</ModalHeader>
                 <ModalBody>
                     <Form>
                         <FormGroup>
-                            <Label for="initials">Короткое название</Label>
+                            <Label for="name">Название дисциплины</Label>
                             <Input
                                 type="text"
-                                name="initials"
-                                id="initials"
-                                defaultValue={this.props.object.initials}
+                                name="name"
+                                id="name"
+                                defaultValue={this.props.object.name}
                                 onChange={this.changeField}
-                                placeholder="Инициалы"
+                                placeholder="Название предмета"
                             />
                         </FormGroup>
-                        <FormGroup>
-                            <Label for="caption">Длинное название</Label>
-                            <Input
-                                type="text"
-                                name="caption"
-                                id="caption"
-                                defaultValue={this.props.object.caption}
-                                onChange={this.changeField}
-                                placeholder="Длинное название"
-                            />
-                        </FormGroup>
+                        <Row form>
+                            <Col md={5}>
+                                <FormGroup>
+                                    <Label for="semester">Номер семестра</Label>
+                                    <Input type="select"
+                                           name="semester"
+                                           defaultValue={this.props.object.semester}
+                                           onChange={this.changeField}
+                                           id="semester">
+                                        <option value="">Не выбрано</option>
+                                        <option value={1}>1</option>
+                                        <option value={2}>2</option>
+                                        <option value={3}>3</option>
+                                        <option value={4}>4</option>
+                                        <option value={5}>5</option>
+                                        <option value={6}>6</option>
+                                        <option value={7}>7</option>
+                                        <option value={8}>8</option>
+                                        <option value={9}>9</option>
+                                        <option value={10}>10</option>
+                                        <option value={11}>11</option>
+                                        <option value={12}>12</option>
+                                    </Input>
+                                </FormGroup>
+                            </Col>
+                            <Col>
+                                <FormGroup>
+                                    <Label for="department">Кафедра</Label>
+                                    <Input type="select"
+                                           name="department_id"
+                                           defaultValue={this.props.object.department_id}
+                                           onChange={this.changeField}
+                                           id="department">
+                                        <option value="">Не выбрано</option>
+                                        {this.renderDepartments(this.props.departments)}
+                                    </Input>
+                                </FormGroup>
+                            </Col>
+                        </Row>
                     </Form>
                 </ModalBody>
                 <ModalFooter>
 
                     <Button color={"primary"}
-                            {...this.state.allowCreate? {}:{disabled: true}}
+                            {...this.state.allowEdit? {}:{disabled: true}}
                             onClick={this.editObject}>
                         Изменить
                     </Button>
-                    <Button {...(this.isEmptyField(this.state.initials)&&this.isEmptyField(this.state.caption))? {color: "secondary"}:{color: "danger"}}
+                    <Button {...this.state.hasChanged? {color: "danger"}:{color: "secondary"}}
                             onClick={this.toggleClose}>Закрыть окно</Button>
                 </ModalFooter>
             </Modal>
@@ -151,10 +197,12 @@ export default class DepartmentModalEdit extends React.Component {
 
     componentWillMount() {
         this.setState({
-            initials: this.props.object.initials,
-            caption: this.props.object.initials,
+            name: this.props.object.name,
+            semester: this.props.object.semester,
+            department_id: this.props.object.department_id,
         })
     }
+
 
     componentDidMount() {
         this.verifyFields()
