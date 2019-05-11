@@ -93,7 +93,7 @@ export default class NavBar extends React.Component {
                                                 <DropdownItem onClick={() => {window.location.href ='/admin/departments'}}>
                                                     Управление кафедрами
                                                 </DropdownItem>
-                                                <DropdownItem disabled>
+                                                <DropdownItem onClick={() => {window.location.href ='/admin/disciplines'}}>
                                                     Управление дисциплинами
                                                 </DropdownItem>
                                                 <DropdownItem disabled>
