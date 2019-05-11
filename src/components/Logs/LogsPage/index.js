@@ -14,10 +14,6 @@ export default class LogsPage extends React.Component {
 
     }
 
-    componentDidMount() {
-
-    }
-
     render() {
         return (
             <div>

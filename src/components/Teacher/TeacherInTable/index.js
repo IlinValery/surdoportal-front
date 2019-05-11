@@ -3,9 +3,9 @@ import './style.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Alert from "reactstrap/es/Alert";
-import DisciplineModalEdit from "../TeacherModalEdit";
+import TeacherModalEdit from "../TeacherModalEdit";
 
-export default class DisciplineInTable extends React.Component {
+export default class TeacherInTable extends React.Component {
 
     constructor(props){
         super(props);
@@ -33,7 +33,7 @@ export default class DisciplineInTable extends React.Component {
 
     deleteItem(){
         console.log("delete item department:");
-        fetch('/api/discipline/delete', {
+        fetch('/api/teacher/delete', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -41,7 +41,7 @@ export default class DisciplineInTable extends React.Component {
             },
             body: JSON.stringify({
                 'usertoken':localStorage.getItem('usertoken'),
-                'discipline_id':this.props.object.iddiscipline
+                'teacher_id':this.props.object.idteacher
             })
         })
             .then( (response) => {
@@ -71,7 +71,6 @@ export default class DisciplineInTable extends React.Component {
         return (
             <tr>
                 <th scope="row">{this.props.object.name}</th>
-                <td>{this.props.object.semester}</td>
                 <td>{this.state.objectDepartment.name}</td>
                 <td className={"text-center"} style={{width: "auto"}}>
                     <Button color="primary" outline size="sm"
@@ -90,7 +89,7 @@ export default class DisciplineInTable extends React.Component {
                 <Modal isOpen={this.state.modalDeleteOpen} toggle={this.getDeleteDialog} style={{minWidth: "40%"}}>
                     <ModalHeader toggle={this.toggle}>Подтвердите действие</ModalHeader>
                     <ModalBody>
-                        Вы действительно хотите удалить дисциплину {this.props.object.name}?
+                        Вы действительно хотите удалить преподавателя {this.props.object.name}?
                     </ModalBody>
                     <ModalFooter>
                         {this.state.itemDeleteStatusBad? (<Alert color={"danger"}>Удаление не удалось, что-то пошло не так, обновите страницу</Alert>):(<></>)}
@@ -98,7 +97,7 @@ export default class DisciplineInTable extends React.Component {
                         <Button color="primary" onClick={this.getDeleteDialog}>Отмена</Button>
                     </ModalFooter>
                 </Modal>
-                <DisciplineModalEdit is_open={this.state.modalEditOpen} object={this.props.object} departments={this.props.departments}/>
+                <TeacherModalEdit is_open={this.state.modalEditOpen} object={this.props.object} departments={this.props.departments}/>
             </tr>
 
         );

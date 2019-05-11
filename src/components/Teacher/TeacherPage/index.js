@@ -6,10 +6,10 @@ import Row from "reactstrap/es/Row";
 import Col from "reactstrap/es/Col";
 import Button from "reactstrap/es/Button";
 import LoadingMessage from "../../Common/LoadingMessage";
-import DisciplineModalCreate from "../TeacherModalCreate";
-import DisciplineInTable from "../TeacherInTable";
+import TeacherInTable from "../TeacherInTable";
+import TeacherModalCreate from "../TeacherModalCreate";
 
-export default class DisciplinePage extends React.Component {
+export default class TeacherPage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -28,7 +28,7 @@ export default class DisciplinePage extends React.Component {
     renderObjects(array) {
         const objectsItems = [];
         for (let i=0; i < array.length; i++) {
-            objectsItems.push(<DisciplineInTable key={array[i].iddiscipline} object={array[i]} departments={this.state.departments}/>);
+            objectsItems.push(<TeacherInTable key={array[i].idteacher} object={array[i]} departments={this.state.departments}/>);
         }
         return  objectsItems;
     }
@@ -44,13 +44,12 @@ export default class DisciplinePage extends React.Component {
         return (
             <div>
                 <Container>
-                    <h1 className={"text-center"}>Дисциплины в системе</h1>
+                    <h1 className={"text-center"}>Преподаватели в системе</h1>
                     {(this.state.objectsLoaded && this.state.departmentsLoaded)? (<div>
                         <Table hover borderless className={"text-center"}>
                             <thead>
                             <tr>
-                                <th>Название</th>
-                                <th>Семестр</th>
+                                <th>Имя</th>
                                 <th>Кафедра</th>
                                 <th>Действие</th>
                             </tr>
@@ -64,14 +63,14 @@ export default class DisciplinePage extends React.Component {
                             <Col/>
                             <Col className={"text-center"}>
                                 <Button color={"primary"} onClick={this.addObjectToggle}>
-                                    Добавить дисциплину
+                                    Добавить преподавателя
                                 </Button>
                             </Col>
                             <Col/>
                         </Row>
-                    </div>) : (<LoadingMessage message={"Загрузка списка дисциплин"}/>)}
+                    </div>) : (<LoadingMessage message={"Загрузка списка преподавателей"}/>)}
                 </Container>
-                <DisciplineModalCreate is_open={this.state.objectCreate} departments={this.state.departments}/>
+                <TeacherModalCreate is_open={this.state.objectCreate} departments={this.state.departments}/>
             </div>
 
         );
@@ -123,6 +122,6 @@ export default class DisciplinePage extends React.Component {
         });
     }
     componentDidMount() {
-        this.loadObects('discipline').then(()=>{this.loadDepartments()})
+        this.loadObects('teacher').then(()=>{this.loadDepartments()})
     }
 }

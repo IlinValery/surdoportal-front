@@ -79,7 +79,7 @@ export default class DisciplineModalEdit extends React.Component {
             this.setState({
                 isOpened: !!(this.state.isCloseHere^this.props.is_open)
             })
-        if ((prevProps.object.name !== this.state.name || prevProps.object.department_id !== this.state.department_id || prevProps.object.department_id !== this.state.department_id) && !this.state.hasChanged){
+        if ((prevProps.object.name !== this.state.name || prevProps.object.semester !== this.state.semester || prevProps.object.department_id !== this.state.department_id) && !this.state.hasChanged){
             this.setState({
                 hasChanged: true
             })

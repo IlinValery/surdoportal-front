@@ -13,6 +13,7 @@ import ProfileEditPage from "./components/Profiles/ProfileEditPage";
 import LogsPage from "./components/Logs/LogsPage";
 import DepartmentPage from "./components/Department/DepartmentPage";
 import DisciplinePage from "./components/Discipline/DisciplinePage";
+import TeacherPage from "./components/Teacher/TeacherPage";
 
 
 class Content extends React.Component {
@@ -65,6 +66,7 @@ class Content extends React.Component {
 
                                     <Route exact path='/admin/departments' component={DepartmentPage}/>
                                     <Route exact path='/admin/disciplines' component={DisciplinePage}/>
+                                    <Route exact path='/admin/teachers' component={TeacherPage}/>
 
                                     <Route exact path='*' component={Page404} status={"permissions"}/>
 

@@ -12,7 +12,7 @@ import Input from "reactstrap/es/Input";
 import Row from "reactstrap/es/Row";
 import Col from "reactstrap/es/Col";
 
-export default class DisciplineModalEdit extends React.Component {
+export default class TeacherModalEdit extends React.Component {
 
     constructor(props){
         super(props);
@@ -22,7 +22,6 @@ export default class DisciplineModalEdit extends React.Component {
             isCloseHere: false,
             isOpened: false,
             name: this.props.name,
-            semester: this.props.semester,
             department_id: this.props.department_id,
             allowEdit: false,
             hasChanged: false
@@ -48,7 +47,7 @@ export default class DisciplineModalEdit extends React.Component {
         });
     }
     verifyFields(){
-        if (this.isEmptyField(this.state.name) || this.isEmptyField(this.state.semester) || this.isEmptyField(this.state.department_id) || !this.state.hasChanged) {
+        if (this.isEmptyField(this.state.name) || this.isEmptyField(this.state.department_id) || !this.state.hasChanged) {
             this.setState({
                 allowEdit: false
             })
@@ -79,7 +78,7 @@ export default class DisciplineModalEdit extends React.Component {
             this.setState({
                 isOpened: !!(this.state.isCloseHere^this.props.is_open)
             })
-        if ((prevProps.object.name !== this.state.name || prevProps.object.department_id !== this.state.department_id || prevProps.object.department_id !== this.state.department_id) && !this.state.hasChanged){
+        if ((prevProps.object.name !== this.state.name || prevProps.object.department_id !== this.state.department_id) && !this.state.hasChanged){
             this.setState({
                 hasChanged: true
             })
@@ -88,7 +87,7 @@ export default class DisciplineModalEdit extends React.Component {
     }
 
     editObject(){
-        fetch('/api/discipline/edit', {
+        fetch('/api/teacher/edit', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -96,9 +95,8 @@ export default class DisciplineModalEdit extends React.Component {
             },
             body: JSON.stringify({
                 'usertoken':localStorage.getItem('usertoken'),
-                'discipline_id':this.props.object.iddiscipline,
+                'teacher_id':this.props.object.idteacher,
                 'name':this.state.name,
-                'semester':this.state.semester,
                 'department_id':this.state.department_id,
             })
         })
@@ -125,11 +123,11 @@ export default class DisciplineModalEdit extends React.Component {
     render() {
         return (
             <Modal isOpen={this.state.isOpened} style={{minWidth: "50%"}}>
-                <ModalHeader>Изменение дисциплины</ModalHeader>
+                <ModalHeader>Изменение преподавателя</ModalHeader>
                 <ModalBody>
                     <Form>
                         <FormGroup>
-                            <Label for="name">Название дисциплины</Label>
+                            <Label for="name">Имя преподавателя</Label>
                             <Input
                                 type="text"
                                 name="name"
@@ -140,30 +138,6 @@ export default class DisciplineModalEdit extends React.Component {
                             />
                         </FormGroup>
                         <Row form>
-                            <Col md={5}>
-                                <FormGroup>
-                                    <Label for="semester">Номер семестра</Label>
-                                    <Input type="select"
-                                           name="semester"
-                                           defaultValue={this.props.object.semester}
-                                           onChange={this.changeField}
-                                           id="semester">
-                                        <option value="">Не выбрано</option>
-                                        <option value={1}>1</option>
-                                        <option value={2}>2</option>
-                                        <option value={3}>3</option>
-                                        <option value={4}>4</option>
-                                        <option value={5}>5</option>
-                                        <option value={6}>6</option>
-                                        <option value={7}>7</option>
-                                        <option value={8}>8</option>
-                                        <option value={9}>9</option>
-                                        <option value={10}>10</option>
-                                        <option value={11}>11</option>
-                                        <option value={12}>12</option>
-                                    </Input>
-                                </FormGroup>
-                            </Col>
                             <Col>
                                 <FormGroup>
                                     <Label for="department">Кафедра</Label>
@@ -177,6 +151,7 @@ export default class DisciplineModalEdit extends React.Component {
                                     </Input>
                                 </FormGroup>
                             </Col>
+                            <Col/>
                         </Row>
                     </Form>
                 </ModalBody>
@@ -198,7 +173,6 @@ export default class DisciplineModalEdit extends React.Component {
     componentWillMount() {
         this.setState({
             name: this.props.object.name,
-            semester: this.props.object.semester,
             department_id: this.props.object.department_id,
         })
     }

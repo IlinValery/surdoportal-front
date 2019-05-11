@@ -173,7 +173,7 @@ export default class DisciplineModalCreate extends React.Component {
                             onClick={()=>this.createObject('discipline')}>
                         Добавить
                     </Button>
-                    <Button {...(this.isEmptyField(this.state.initials)&&this.isEmptyField(this.state.caption))? {color: "secondary"}:{color: "danger"}}
+                    <Button {...(this.isEmptyField(this.state.name)&&this.isEmptyField(this.state.semester)&&this.isEmptyField(this.state.department_id))? {color: "secondary"}:{color: "danger"}}
                         onClick={this.toggleClose}>Закрыть окно</Button>
                 </ModalFooter>
             </Modal>

@@ -12,7 +12,7 @@ import Input from "reactstrap/es/Input";
 import Row from "reactstrap/es/Row";
 import Col from "reactstrap/es/Col";
 
-export default class DisciplineModalCreate extends React.Component {
+export default class TeacherModalCreate extends React.Component {
 
     constructor(props){
         super(props);
@@ -22,7 +22,6 @@ export default class DisciplineModalCreate extends React.Component {
             isCloseHere: false,
             isOpened: false,
             name: "",
-            semester: "",
             department_id: "",
             allowCreate: false
 
@@ -49,7 +48,7 @@ export default class DisciplineModalCreate extends React.Component {
     }
 
     verifyFields(){
-        if (this.isEmptyField(this.state.name) || this.isEmptyField(this.state.semester) || this.isEmptyField(this.state.department_id)) {
+        if (this.isEmptyField(this.state.name) || this.isEmptyField(this.state.department_id)) {
             this.setState({
                 allowCreate: false
             })
@@ -81,7 +80,6 @@ export default class DisciplineModalCreate extends React.Component {
             body: JSON.stringify({
                 'usertoken':localStorage.getItem('usertoken'),
                 'name':this.state.name,
-                'semester':this.state.semester,
                 'department_id':this.state.department_id,
             })
         })
@@ -115,43 +113,20 @@ export default class DisciplineModalCreate extends React.Component {
     render() {
         return (
             <Modal isOpen={this.state.isOpened} style={{minWidth: "50%"}}>
-                <ModalHeader>Добавление новой дисциплины</ModalHeader>
+                <ModalHeader>Добавление нового преподавателя</ModalHeader>
                 <ModalBody>
                     <Form>
                         <FormGroup>
-                            <Label for="name">Название дисциплины</Label>
+                            <Label for="name">Имя преподавателя</Label>
                             <Input
                                 type="text"
                                 name="name"
                                 id="name"
                                 onChange={this.changeField}
-                                placeholder="Название предмета"
+                                placeholder="Имя преподавателя"
                             />
                         </FormGroup>
                         <Row form>
-                            <Col md={5}>
-                                <FormGroup>
-                                    <Label for="semester">Номер семестра</Label>
-                                    <Input type="select"
-                                           name="semester"
-                                           onChange={this.changeField}
-                                           id="semester">
-                                        <option value="">Не выбрано</option>
-                                        <option value={1}>1</option>
-                                        <option value={2}>2</option>
-                                        <option value={3}>3</option>
-                                        <option value={4}>4</option>
-                                        <option value={5}>5</option>
-                                        <option value={6}>6</option>
-                                        <option value={7}>7</option>
-                                        <option value={8}>8</option>
-                                        <option value={9}>9</option>
-                                        <option value={10}>10</option>
-                                        <option value={11}>11</option>
-                                        <option value={12}>12</option>
-                                    </Input>
-                                </FormGroup>
-                            </Col>
                             <Col>
                                 <FormGroup>
                                     <Label for="department">Кафедра</Label>
@@ -164,16 +139,17 @@ export default class DisciplineModalCreate extends React.Component {
                                     </Input>
                                 </FormGroup>
                             </Col>
+                            <Col/>
                         </Row>
                     </Form>
                 </ModalBody>
                 <ModalFooter>
                     <Button color={"primary"}
                             {...this.state.allowCreate? {}:{disabled: true}}
-                            onClick={()=>this.createObject('discipline')}>
+                            onClick={()=>this.createObject('teacher')}>
                         Добавить
                     </Button>
-                    <Button {...(this.isEmptyField(this.state.initials)&&this.isEmptyField(this.state.caption))? {color: "secondary"}:{color: "danger"}}
+                    <Button {...(this.isEmptyField(this.state.name)&&this.isEmptyField(this.state.semester))? {color: "secondary"}:{color: "danger"}}
                         onClick={this.toggleClose}>Закрыть окно</Button>
                 </ModalFooter>
             </Modal>

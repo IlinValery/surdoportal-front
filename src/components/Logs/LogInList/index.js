@@ -63,6 +63,7 @@ export default class LogInList extends React.Component {
         if (table==="user"){ name = "Пользователь"}
         else if (table==="department"){ name = "Кафедра"}
         else if (table==="discipline"){ name = "Дисциплина"}
+        else if (table==="teacher"){ name = "Преподаватель"}
         return name
     }
 
@@ -167,6 +168,12 @@ export default class LogInList extends React.Component {
                             let department = {name: data.data.name};
                             this.setState({
                                 elementInfo: department,
+                                isLoadedElement: true
+                            })
+                        } else  if (this.props.log.table==="teacher") {
+                            let teacher = {name: data.data.name};
+                            this.setState({
+                                elementInfo: teacher,
                                 isLoadedElement: true
                             })
                         }
