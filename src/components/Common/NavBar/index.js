@@ -80,7 +80,7 @@ export default class NavBar extends React.Component {
                                             Профиль {this.state.first_name} {this.state.last_name}
                                         </DropdownItem>
 
-                                        <DropdownItem disabled onClick={() => {window.location.href = '/terms/edit'}}>
+                                        <DropdownItem onClick={() => {window.location.href = '/terms/editor'}}>
                                             Управление терминами
                                         </DropdownItem>
 

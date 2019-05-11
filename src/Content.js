@@ -4,7 +4,7 @@ import {Route, Switch} from 'react-router-dom'
 import HomePage from './components/HomePage'
 import LoginPage from './components/LoginPage'
 import ProfilePage from "./components/Profiles/MyProfilePage";
-import TermsPublicPage from "./components/TermsPublicPage";
+import TermsPublicPage from "./components/Terms/TermsPublicPage";
 import ProfilesPage from "./components/Profiles/ProfilesPage";
 import Page404 from "./components/404Page";
 import jwt_decode from "jwt-decode";
@@ -14,6 +14,7 @@ import LogsPage from "./components/Logs/LogsPage";
 import DepartmentPage from "./components/Department/DepartmentPage";
 import DisciplinePage from "./components/Discipline/DisciplinePage";
 import TeacherPage from "./components/Teacher/TeacherPage";
+import TermsAdminPage from "./components/Terms/TermsAdminPage";
 
 
 class Content extends React.Component {
@@ -54,6 +55,7 @@ class Content extends React.Component {
                     {!this.state.loggedIn ? (<Route exact path='*' component={Page404} status={"not_found"}/>) : (
                             <Switch>
                                 <Route exact path='/profile/me' component={ProfilePage}/>
+                                <Route exact path='/terms/editor' component={TermsAdminPage}/>
 
                                 {/*Здесь все, что доступно только зашедшим в систему*/}
 
@@ -70,7 +72,6 @@ class Content extends React.Component {
 
                                     <Route exact path='*' component={Page404} status={"permissions"}/>
 
-                                    {/*Здесь все, что доступно только суперпользователю системы*/}
                                 </Switch>) : (<Route exact path='*' component={Page404} status={"permissions"}/>)}
                             </Switch>
                     )}
