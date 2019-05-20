@@ -9,6 +9,9 @@ import Input from "reactstrap/es/Input";
 import Button from "reactstrap/es/Button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TermModalCreate from "./TermModalCreate";
+import CustomInput from "reactstrap/es/CustomInput";
+import LoadingMessage from "../../Common/LoadingMessage";
+import Table from "reactstrap/es/Table";
 
 
 export default class TermsAdminPage extends React.Component {
@@ -20,9 +23,17 @@ export default class TermsAdminPage extends React.Component {
             disciplines: [],
             users: [],
             teachers: [],
+            terms: [],
             loadedFilter: false,
+            loadedTerms: false,
             objectCreate: false,
+            discipline_id: 0,
+            creator_id: 0,
+            only_invalided: 1,
+            page:1
+
         };
+
 
         this.addObjectToggle = this.addObjectToggle.bind(this);
 
@@ -34,25 +45,42 @@ export default class TermsAdminPage extends React.Component {
             objectCreate: !this.state.objectCreate,
         })
     }
-
+    renderObjects(array){
+        console.log(array)
+    }
     render() {
-        console.log(this.state.disciplines, this.state.users);
         return (
             <div>
                 <h1 className={"text-center"}>Панель управления терминами</h1>
                 <Row>
                     <Col md={9}>
+                        {this.state.loadedTerms? (<div>
+                            {this.state.terms.length>0?(<div>
+                                <Table hover borderless className={"text-center"}>
+                                    <thead>
+                                    <tr>
+                                        <th>Название</th>
+                                        <th>Дисциплина</th>
+                                        <th>Преподаватель</th>
+                                        <th>Одобрено</th>
+                                        <th>Создатель</th>
+                                        <th>Дата создания</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {this.renderObjects(this.state.terms)}
+                                    </tbody>
+                                </Table>
+                            </div>):(<h2 className={"text-center"}>Не удалось найти термины по запросу</h2>)}
+
+                        </div>):(<LoadingMessage message={"Спокуха, мы загружаем для вас термины"}/>)}
 
                     </Col>
                     <Col md={3}>
                         {this.state.loadedFilter? (
                             <div className={"filter-terms"}>
                                 <Form>
-                                    <FormGroup>
-                                        <Label check>
-                                            <Input type="checkbox" /> Отображать утвержденные термины
-                                        </Label>
-                                    </FormGroup>
                                     {this.state.disciplines.length>0? (
                                         <FormGroup>
                                             <Label for="discipline">Дисциплина</Label>
@@ -73,15 +101,22 @@ export default class TermsAdminPage extends React.Component {
                                             {this.renderUsers(this.state.users)}
                                         </Input>
                                     </FormGroup>
+                                    <FormGroup check style={{paddingLeft:0}}>
+                                        <Label check>
+                                            <CustomInput type="switch" id="CustomSwitch" name="customSwitch"
+                                                         label="Отображать утвержденные" />
+                                        </Label>
+                                    </FormGroup>
+
                                 </Form>
                                 <div className={"text-center"}>
-                                    <Button color={"primary"}>
+                                    <Button color={"primary"} block outline style={{marginTop: "32px"}}>
                                         <FontAwesomeIcon icon={"search"} style={{marginRight: "8px"}}/>
                                         Показать
                                     </Button>
                                     {(this.state.disciplines.length>0 && this.state.teachers.length>0)? (<div>
-                                        <Button color={"primary"}
-                                                onClick={this.addObjectToggle} style={{marginTop: "16px"}}>
+                                        <Button color={"primary"} block outline
+                                                onClick={this.addObjectToggle} style={{marginTop: "32px"}}>
                                             <FontAwesomeIcon icon={"plus"} style={{marginRight: "8px"}}/>
                                             Добавить новый
                                         </Button>
@@ -104,7 +139,7 @@ export default class TermsAdminPage extends React.Component {
 
 
     componentDidMount() {
-        this.loadFilters()
+        this.loadFilters().then(()=>this.loadTerms());
     }
 
 
@@ -123,7 +158,40 @@ export default class TermsAdminPage extends React.Component {
         }
         return  objectsItems;
     }
+    loadTerms(){
+        fetch('/api/term/view_edit', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'discipline_id':this.state.discipline_id,
+                'creator_id':this.state.creator_id,
+                'only_invalided':this.state.only_invalided,
+                'page': this.state.page
+            })
+        })
+            .then( (response) => {
+                if (response.status !== 200) {
+                    console.log('Looks like there was a problem. Status Code: ' +
+                        response.status);
+                    return;
+                }
+                return response.json();
+            })
+            .then((data) => {
+                this.setState({
+                    loadedTerms: true,
+                    terms: data.result
+                })
 
+            })
+            .catch((err) => {
+                console.log('Fetch Error:', err);
+            });
+
+    }
     loadFilters(){
         fetch('/api/term/disciplines_users')
             .then( (response) => {
@@ -146,6 +214,11 @@ export default class TermsAdminPage extends React.Component {
             .catch((err) => {
                 console.log('Fetch Error:', err);
             });
+        return new Promise(function(resolve, reject) {
+            setTimeout(function(){
+                resolve(100);
+            }, 200)
+        });
     }
 
 

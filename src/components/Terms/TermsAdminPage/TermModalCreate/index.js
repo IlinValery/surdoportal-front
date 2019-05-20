@@ -22,7 +22,11 @@ export default class TermModalCreate extends React.Component {
             isCloseHere: false,
             isOpened: false,
             caption: "",
-            department_id: "",
+            description: "",
+            discipline_id: "",
+            teacher_id: "",
+            lesson: "",
+            image_path: "",
             allowCreate: false
 
         };
@@ -48,7 +52,9 @@ export default class TermModalCreate extends React.Component {
     }
 
     verifyFields(){
-        if (this.isEmptyField(this.state.name) || this.isEmptyField(this.state.department_id)) {
+        if (this.isEmptyField(this.state.caption) || this.isEmptyField(this.state.description)
+            || this.isEmptyField(this.state.discipline_id) || this.isEmptyField(this.state.teacher_id)
+            || this.isEmptyField(this.state.lesson) || this.isEmptyField(this.state.image_path)) {
             this.setState({
                 allowCreate: false
             })
@@ -79,8 +85,12 @@ export default class TermModalCreate extends React.Component {
             },
             body: JSON.stringify({
                 'usertoken':localStorage.getItem('usertoken'),
-                'name':this.state.name,
-                'department_id':this.state.department_id,
+                'caption':this.state.caption,
+                'description':this.state.description,
+                'discipline_id':this.state.discipline_id,
+                'teacher_id':this.state.teacher_id,
+                'lesson':this.state.lesson,
+                'image_path':this.state.image_path,
             })
         })
             .then( (response) => {
@@ -129,6 +139,7 @@ export default class TermModalCreate extends React.Component {
                                 type="text"
                                 name="caption"
                                 id="caption"
+
                                 onChange={this.changeField}
                                 placeholder="Название термина"
                             />
@@ -198,15 +209,43 @@ export default class TermModalCreate extends React.Component {
                             </Col>
 
                         </Row>
+                        <Row form>
+                            <Col>
+                                <FormGroup>
+                                    <Label for="image_path">Ссылка на изображение</Label>
+                                    <Input
+                                        type="text"
+                                        name="image_path"
+                                        id="image_path"
+                                        onChange={this.changeField}
+                                        placeholder="Ссылка на изображение"
+                                    />
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        {this.isEmptyField(this.state.image_path)? (<></>):(
+                            <Row>
+                                <Col/>
+                                <Col md={4}>
+                                    <p className={"text-center"}>Предпросмотр</p>
+                                    <div>
+                                        <img className={"rounded mx-auto d-block img-fluid img-thumbnail"} style={{maxHeight: "200px"}} src={this.state.image_path} alt={""}/>
+                                    </div>
+                                </Col>
+                                <Col/>
+                            </Row>
+                        )}
                     </Form>
                 </ModalBody>
                 <ModalFooter>
                     <Button color={"primary"}
                             {...this.state.allowCreate? {}:{disabled: true}}
-                            onClick={()=>this.createObject('teacher')}>
+                            onClick={()=>this.createObject('term')}>
                         Добавить
                     </Button>
-                    <Button {...(this.isEmptyField(this.state.name)&&this.isEmptyField(this.state.semester))? {color: "secondary"}:{color: "danger"}}
+                    <Button {...(this.isEmptyField(this.state.caption) && this.isEmptyField(this.state.description)
+                        && this.isEmptyField(this.state.discipline_id) && this.isEmptyField(this.state.teacher_id)
+                        && this.isEmptyField(this.state.lesson) && this.isEmptyField(this.state.image_path))? {color: "secondary"}:{color: "danger"}}
                             onClick={this.toggleClose}>Закрыть окно</Button>
                 </ModalFooter>
             </Modal>
