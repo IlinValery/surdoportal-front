@@ -44,19 +44,21 @@ export default class DepartmentPage extends React.Component {
                 <Container>
                     <h1 className={"text-center"}>Кафедры в системе</h1>
                     {this.state.departmentsLoaded ? (<div>
-                        <Table hover borderless className={"text-center"}>
-                            <thead>
-                            <tr>
-                                <th>Инициалы</th>
-                                <th>Полное название</th>
-                                <th>Действие</th>
-                            </tr>
-                            </thead>
+                        {this.state.departments.length>0? (<div>
+                            <Table hover borderless className={"text-center"}>
+                                <thead>
+                                <tr>
+                                    <th>Инициалы</th>
+                                    <th>Полное название</th>
+                                    <th>Действие</th>
+                                </tr>
+                                </thead>
 
-                            <tbody>
-                            {this.renderDepartments(this.state.departments)}
-                            </tbody>
-                        </Table>
+                                <tbody>
+                                {this.renderDepartments(this.state.departments)}
+                                </tbody>
+                            </Table>
+                        </div>):(<h2 className={"text-center"}>В системе не представлены кафедры</h2>)}
                         <Row>
                             <Col/>
                             <Col className={"text-center"}>

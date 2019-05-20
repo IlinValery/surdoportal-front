@@ -87,9 +87,6 @@ export default class NavBar extends React.Component {
                                         {this.state.isSuperuser? (
                                             <div>
                                                 <DropdownItem divider />
-                                                <DropdownItem onClick={() => {window.location.href ='/profile/all'}}>
-                                                    Управление пользователями
-                                                </DropdownItem>
                                                 <DropdownItem onClick={() => {window.location.href ='/admin/departments'}}>
                                                     Управление кафедрами
                                                 </DropdownItem>
@@ -100,6 +97,9 @@ export default class NavBar extends React.Component {
                                                     Управление преподавателями
                                                 </DropdownItem>
                                                 <DropdownItem divider />
+                                                <DropdownItem onClick={() => {window.location.href ='/profile/all'}}>
+                                                    Управление пользователями
+                                                </DropdownItem>
                                                 <DropdownItem onClick={() => {window.location.href ='/admin/logs'}}>
                                                     Журнал действий
                                                 </DropdownItem>

@@ -6,4 +6,8 @@ body {
 }
 h1{
     color: #000c52;
+    font-size: xx-large !important;
+}
+h2{
+    font-size: x-large !important;
 }

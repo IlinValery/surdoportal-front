@@ -45,31 +45,35 @@ export default class DisciplinePage extends React.Component {
             <div>
                 <Container>
                     <h1 className={"text-center"}>Дисциплины в системе</h1>
-                    {(this.state.objectsLoaded && this.state.departmentsLoaded)? (<div>
-                        <Table hover borderless className={"text-center"}>
-                            <thead>
-                            <tr>
-                                <th>Название</th>
-                                <th>Семестр</th>
-                                <th>Кафедра</th>
-                                <th>Действие</th>
-                            </tr>
-                            </thead>
+                    {(this.state.objectsLoaded && this.state.departmentsLoaded)? (
+                        <div>
+                            {this.state.objects.length>0?(<div>
+                                <Table hover borderless className={"text-center"}>
+                                    <thead>
+                                    <tr>
+                                        <th>Название</th>
+                                        <th>Семестр</th>
+                                        <th>Кафедра</th>
+                                        <th>Действие</th>
+                                    </tr>
+                                    </thead>
 
-                            <tbody>
-                            {this.renderObjects(this.state.objects)}
-                            </tbody>
-                        </Table>
-                        <Row>
-                            <Col/>
-                            <Col className={"text-center"}>
-                                <Button color={"primary"} onClick={this.addObjectToggle}>
-                                    Добавить дисциплину
-                                </Button>
-                            </Col>
-                            <Col/>
-                        </Row>
-                    </div>) : (<LoadingMessage message={"Загрузка списка дисциплин"}/>)}
+                                    <tbody>
+                                    {this.renderObjects(this.state.objects)}
+                                    </tbody>
+                                </Table>
+                            </div>):(<h2 className={"text-center"}>В системе не представлены дисциплины</h2>)}
+                            <Row>
+                                <Col/>
+                                <Col className={"text-center"}>
+                                    <Button color={"primary"} onClick={this.addObjectToggle}>
+                                        Добавить дисциплину
+                                    </Button>
+                                </Col>
+                                <Col/>
+                            </Row>
+                        </div>
+                    ) : (<LoadingMessage message={"Загрузка списка дисциплин"}/>)}
                 </Container>
                 <DisciplineModalCreate is_open={this.state.objectCreate} departments={this.state.departments}/>
             </div>

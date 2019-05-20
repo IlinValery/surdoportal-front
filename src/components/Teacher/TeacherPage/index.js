@@ -46,19 +46,21 @@ export default class TeacherPage extends React.Component {
                 <Container>
                     <h1 className={"text-center"}>Преподаватели в системе</h1>
                     {(this.state.objectsLoaded && this.state.departmentsLoaded)? (<div>
-                        <Table hover borderless className={"text-center"}>
-                            <thead>
-                            <tr>
-                                <th>Имя</th>
-                                <th>Кафедра</th>
-                                <th>Действие</th>
-                            </tr>
-                            </thead>
+                        {this.state.objects.length>0? (<div>
+                            <Table hover borderless className={"text-center"}>
+                                <thead>
+                                <tr>
+                                    <th>Имя</th>
+                                    <th>Кафедра</th>
+                                    <th>Действие</th>
+                                </tr>
+                                </thead>
 
-                            <tbody>
-                            {this.renderObjects(this.state.objects)}
-                            </tbody>
-                        </Table>
+                                <tbody>
+                                {this.renderObjects(this.state.objects)}
+                                </tbody>
+                            </Table>
+                        </div>):(<h2 className={"text-center"}>В системе не представлены преподаватели</h2>)}
                         <Row>
                             <Col/>
                             <Col className={"text-center"}>
