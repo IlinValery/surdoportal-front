@@ -64,6 +64,8 @@ export default class LogInList extends React.Component {
         else if (table==="department"){ name = "Кафедра"}
         else if (table==="discipline"){ name = "Дисциплина"}
         else if (table==="teacher"){ name = "Преподаватель"}
+        else if (table==="term"){ name = "Термин"}
+        else if (table==="media"){ name = "Видеофайл"}
         return name
     }
 

@@ -14,6 +14,8 @@ import ModalFooter from "reactstrap/es/ModalFooter";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Modal, ModalBody, ModalHeader} from "reactstrap";
 import Alert from "reactstrap/es/Alert";
+import MediaComponentEditor from "../../Media/MediaComponentEditor";
+import MediaModalCreate from "../../Media/MediaModalCreate";
 
 export default class TermEditorPage extends React.Component {
 
@@ -41,11 +43,18 @@ export default class TermEditorPage extends React.Component {
             is_superuser: 0,
             modalDeleteOpen: false,
             itemDeleteStatusBad: false,
+            objectCreate: false
 
         }
         this.changeField = this.changeField.bind(this);
         this.getDeleteDialog = this.getDeleteDialog.bind(this);
+        this.addObjectToggle = this.addObjectToggle.bind(this);
+    }
 
+    addObjectToggle() {
+        this.setState({
+            objectCreate: !this.state.objectCreate,
+        })
     }
 
     getDeleteDialog(){
@@ -220,12 +229,18 @@ export default class TermEditorPage extends React.Component {
                 console.log('Fetch Error:', err);
             });
     }
-    renderMedia
+    renderMedia(array){
+        const objectsItems = [];
+        for (let i=0; i < array.length; i++) {
+            objectsItems.push(<MediaComponentEditor key={array[i].idmedia} media={array[i]} is_superuser={this.state.is_superuser}/>);
+        }
+        return  objectsItems;
+    }
     render() {
         //console.log(this.state)
         return (
             <div>
-                <h1 className={"text-center"}>Редактирование термина</h1>
+                <h1 className={"text-center"}>Редактирование термина {this.state.is_superuser?("(администратор)"):("")}</h1>
                 {this.state.contentLoaded? (
                     <Jumbotron style={{paddingTop: "16px", paddingBottom: "16px"}}>
                         <h2 className={"text-center"}>Общие сведения</h2>
@@ -379,10 +394,15 @@ export default class TermEditorPage extends React.Component {
 
                             </Col>
                         </Row>
-                        <h2 className={"text-center"}>Видеоконтент ({this.state.media.length}/3) <Button>Добавить видео</Button></h2>
+                        <h2 className={"text-center"}>Видеоконтент ({this.state.media.length}/3)
+                            {this.state.media.length<3?(<Button color={"primary"}
+                                                                onClick={this.addObjectToggle}
+                                                                style={{marginLeft: "32px"}}>Добавить видео</Button>):(<></>)}
+                        </h2>
+                        <MediaModalCreate is_open={this.state.objectCreate} term_id={this.state.term_id}/>
                         {this.state.mediaLoaded? (
-                            <Row>
-                                здесь кнопки на контенты (это еще сделать бы)
+                            <Row className={"text-center"} style={{marginTop: "32px"}}>
+                                {this.renderMedia(this.state.media)}
                             </Row>
                         ):(<></>)}
 

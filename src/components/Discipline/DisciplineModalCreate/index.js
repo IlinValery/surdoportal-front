@@ -166,6 +166,7 @@ export default class DisciplineModalCreate extends React.Component {
                             </Col>
                         </Row>
                     </Form>
+
                 </ModalBody>
                 <ModalFooter>
                     <Button color={"primary"}
