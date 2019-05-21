@@ -12,6 +12,8 @@ import TermModalCreate from "./TermModalCreate";
 import CustomInput from "reactstrap/es/CustomInput";
 import LoadingMessage from "../../Common/LoadingMessage";
 import Table from "reactstrap/es/Table";
+import TermInTable from "./TermInTable";
+import jwt_decode from "jwt-decode";
 
 
 export default class TermsAdminPage extends React.Component {
@@ -30,28 +32,58 @@ export default class TermsAdminPage extends React.Component {
             discipline_id: 0,
             creator_id: 0,
             only_invalided: 1,
-            page:1
+            only_invalided_cur: 1,
+            filtersApplied: true,
+            page:1,
+            cur_user: 0,
+            is_superuser: 0
 
         };
 
-
+        this.changeField = this.changeField.bind(this);
+        this.changeOnlyValided = this.changeOnlyValided.bind(this);
         this.addObjectToggle = this.addObjectToggle.bind(this);
 
     }
 
     addObjectToggle() {
-        console.log("here")
         this.setState({
             objectCreate: !this.state.objectCreate,
         })
     }
-    renderObjects(array){
-        console.log(array)
+
+    renderObjects(array) {
+        const objectsItems = [];
+        for (let i=0; i < array.length; i++) {
+            objectsItems.push(<TermInTable key={array[i].idterm} elem_number={"user"+i} object={array[i]} only_invalided={this.state.only_invalided} is_superuser={this.state.is_superuser}/>);
+        }
+        return  objectsItems;
+    }
+
+    changeField(e){
+        this.setState({[e.target.name]: e.target.value, filtersApplied: false});
+        return new Promise(function(resolve, reject) {
+            setTimeout(function(){
+                resolve(100);
+            }, 100)
+        });
+    }
+    changeOnlyValided(){
+        this.setState({
+            only_invalided_cur: !this.state.only_invalided_cur,
+            filtersApplied: false
+        });
+    }
+    applyFilter(){
+        this.setState({
+            loadedTerms: false,
+        });
+        this.loadTerms();
     }
     render() {
         return (
             <div>
-                <h1 className={"text-center"}>Панель управления терминами</h1>
+                <h1 className={"text-center"}>Панель управления терминами {this.state.is_superuser?("(администратор)"):("")}</h1>
                 <Row>
                     <Col md={9}>
                         {this.state.loadedTerms? (<div>
@@ -59,12 +91,12 @@ export default class TermsAdminPage extends React.Component {
                                 <Table hover borderless className={"text-center"}>
                                     <thead>
                                     <tr>
-                                        <th>Название</th>
+                                        <th>Название термина</th>
                                         <th>Дисциплина</th>
-                                        <th>Преподаватель</th>
-                                        <th>Одобрено</th>
-                                        <th>Создатель</th>
-                                        <th>Дата создания</th>
+                                        {this.state.only_invalided? (<></>):(<th>Одобрено</th>)}
+                                        {this.state.is_superuser? (<th>Создатель</th>):(<></>)}
+                                        <th>Дата изменения</th>
+                                        <th>Действие</th>
                                     </tr>
                                     </thead>
 
@@ -72,7 +104,7 @@ export default class TermsAdminPage extends React.Component {
                                     {this.renderObjects(this.state.terms)}
                                     </tbody>
                                 </Table>
-                            </div>):(<h2 className={"text-center"}>Не удалось найти термины по запросу</h2>)}
+                            </div>):(<h2 className={"text-center"} style={{marginTop: "20vh"}}>Не удалось найти термины по запросу :(</h2>)}
 
                         </div>):(<LoadingMessage message={"Спокуха, мы загружаем для вас термины"}/>)}
 
@@ -86,31 +118,41 @@ export default class TermsAdminPage extends React.Component {
                                             <Label for="discipline">Дисциплина</Label>
                                             <Input type="select"
                                                    name="discipline_id"
+                                                   onChange={this.changeField}
                                                    id="discipline">
-                                                <option value={0}>Не выбрано</option>
+                                                <option value={0}>Все</option>
                                                 {this.renderDiscipline(this.state.disciplines)}
                                             </Input>
                                         </FormGroup>
                                     ):(<></>)}
-                                    <FormGroup>
-                                        <Label for="user">Пользователь</Label>
-                                        <Input type="select"
-                                               name="user_id"
-                                               id="user">
-                                            <option value={0}>Не выбрано</option>
-                                            {this.renderUsers(this.state.users)}
-                                        </Input>
-                                    </FormGroup>
+                                    {this.state.is_superuser? (
+                                        <FormGroup>
+                                            <Label for="user">Пользователь</Label>
+                                            <Input type="select"
+                                                   name="creator_id"
+                                                   onChange={this.changeField}
+                                                   id="user">
+                                                <option value={0}>Все</option>
+                                                {this.renderUsers(this.state.users)}
+                                            </Input>
+                                        </FormGroup>
+                                    ): (<></>)}
+
+
                                     <FormGroup check style={{paddingLeft:0}}>
                                         <Label check>
-                                            <CustomInput type="switch" id="CustomSwitch" name="customSwitch"
+                                            <CustomInput type="switch" id="CustomSwitch"
+                                                         onClick={this.changeOnlyValided}
+                                                         name="customSwitch"
                                                          label="Отображать утвержденные" />
                                         </Label>
                                     </FormGroup>
 
                                 </Form>
                                 <div className={"text-center"}>
-                                    <Button color={"primary"} block outline style={{marginTop: "32px"}}>
+                                    <Button color={"primary"} block
+                                            onClick={()=>this.applyFilter()}
+                                            {...this.state.filtersApplied? {disabled: true, outline: true}:{}} style={{marginTop: "32px"}}>
                                         <FontAwesomeIcon icon={"search"} style={{marginRight: "8px"}}/>
                                         Показать
                                     </Button>
@@ -142,6 +184,22 @@ export default class TermsAdminPage extends React.Component {
         this.loadFilters().then(()=>this.loadTerms());
     }
 
+    componentWillMount() {
+        const token = localStorage.getItem('usertoken');
+        if (token){
+            const decoded = jwt_decode(token)
+            this.setState({
+                cur_user: decoded.identity.id,
+                is_superuser: decoded.identity.is_superuser
+            })
+            if (!decoded.identity.is_superuser) {
+                this.setState({
+                    creator_id: decoded.identity.id
+                })
+            }
+        }
+
+    }
 
     renderDiscipline(array){
         const objectsItems = [];
@@ -168,7 +226,7 @@ export default class TermsAdminPage extends React.Component {
             body: JSON.stringify({
                 'discipline_id':this.state.discipline_id,
                 'creator_id':this.state.creator_id,
-                'only_invalided':this.state.only_invalided,
+                'only_invalided':this.state.only_invalided_cur,
                 'page': this.state.page
             })
         })
@@ -181,8 +239,11 @@ export default class TermsAdminPage extends React.Component {
                 return response.json();
             })
             .then((data) => {
-                this.setState({
+                console.log(data)
+                this.setState(  {
                     loadedTerms: true,
+                    filtersApplied: true,
+                    only_invalided: this.state.only_invalided_cur,
                     terms: data.result
                 })
 

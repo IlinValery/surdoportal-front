@@ -76,13 +76,13 @@ export default class TeacherInTable extends React.Component {
                     <Button color="primary" outline size="sm"
                             style={{marginRight: "8px",}}
                             onClick={this.getEditDialog}
-                            title={"Редактировать дисциплину "+this.props.object.name}>
+                            title={"Редактировать преподавателя "+this.props.object.name}>
                         <FontAwesomeIcon icon="pen" />
                     </Button>
                     <Button color="danger" outline size="sm"
                             onClick={this.getDeleteDialog}
                             {...this.state.curUserIsLoggedIn? {disabled: true}: {}}
-                            title={"Удалить дисциплину "+this.props.object.name}>
+                            title={"Удалить преподавателя "+this.props.object.name}>
                         <FontAwesomeIcon icon="trash"/>
                     </Button>
                 </td>

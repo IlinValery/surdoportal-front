@@ -15,6 +15,7 @@ import DepartmentPage from "./components/Department/DepartmentPage";
 import DisciplinePage from "./components/Discipline/DisciplinePage";
 import TeacherPage from "./components/Teacher/TeacherPage";
 import TermsAdminPage from "./components/Terms/TermsAdminPage";
+import TermEditorPage from "./components/Terms/TermEditorPage";
 
 
 class Content extends React.Component {
@@ -55,8 +56,8 @@ class Content extends React.Component {
                     {!this.state.loggedIn ? (<Route exact path='*' component={Page404} status={"not_found"}/>) : (
                             <Switch>
                                 <Route exact path='/profile/me' component={ProfilePage}/>
+                                <Route exact path='/terms/editor/:number' component={TermEditorPage}/>
                                 <Route exact path='/terms/editor' component={TermsAdminPage}/>
-
                                 {/*Здесь все, что доступно только зашедшим в систему*/}
 
                                 {this.state.isSuperuser ? (<Switch>
