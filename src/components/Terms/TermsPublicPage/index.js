@@ -37,17 +37,33 @@ export default class TermsPublicPage extends React.Component {
 
 
         }
+        this.changeField = this.changeField.bind(this);
 
+    }
+    changeField(e){
+        this.setState({[e.target.name]: e.target.value, filtersApplied: false});
+        return new Promise(function(resolve, reject) {
+            setTimeout(function(){
+                resolve(100);
+            }, 100)
+        });
+    }
+    applyFilter(){
+        this.setState({
+            loadedTerms: false,
+        });
+        this.loadTerms();
     }
 
     renderDiscipline(array, department){
-        const objectsItems = [];
+        let objectsItems = [];
         for (let i=0; i < array.length; i++) {
-            if (department){
-                if (array[i].department_id.iddepartment===department){
+            if (department>0){
+                if (array[i].department_id.iddepartment===+department){
                     objectsItems.push(<option value={array[i].iddiscipline} key={array[i].iddiscipline}>{array[i].name} ({array[i].department_id.initials})</option>);
                 } else {}
             } else {
+
                 objectsItems.push(<option value={array[i].iddiscipline} key={array[i].iddiscipline}>{array[i].name} ({array[i].department_id.initials})</option>);
             }
         }
@@ -124,7 +140,6 @@ export default class TermsPublicPage extends React.Component {
                 return response.json();
             })
             .then((data) => {
-                console.log(data);
                 this.setState(  {
                     loadedTerms: true,
                     filtersApplied: true,
@@ -145,11 +160,11 @@ export default class TermsPublicPage extends React.Component {
                     <Col lg={3} className={"filter-menu"}>
                         {this.state.loadedFilter? (
                             <div className={"filter-terms-view"}>
+                                {this.state.disciplines.length>0? (
+                                    <div>
                                 <Form>
-                                    {this.state.disciplines.length>0? (
-                                        <div>
                                             <FormGroup>
-                                                <Label for="department">Кафедра</Label>
+                                                <Label for="department" title={"Помогает выбрать дисциплины"}>Кафедра *</Label>
                                                 <Input type="select"
                                                        name="department_id"
                                                        onChange={this.changeField}
@@ -179,9 +194,6 @@ export default class TermsPublicPage extends React.Component {
                                                 />
                                             </FormGroup>
 
-                                        </div>
-
-                                    ):(<></>)}
 
                                 </Form>
                                 <div className={"text-center"}>
@@ -192,6 +204,7 @@ export default class TermsPublicPage extends React.Component {
                                         Показать
                                     </Button>
                                 </div>
+                                </div>):(<></>)}
 
                             </div>
 
@@ -249,9 +262,17 @@ export default class TermsPublicPage extends React.Component {
     renderTeacherTerm(teacher){
         let str = "";
         let array = this.state.teachers
+        let array_dep = this.state.departments;
+        let cur_department = {}
         for (let i=0; i < array.length; i++) {
+            for (let j=0; j<array_dep.length;j++){
+                if (array_dep[j].iddepartment===array[i].department_id){
+                    cur_department = array_dep[j];
+                }
+
+            }
             if (array[i].idteacher===teacher){
-                str = array[i].name
+                str = array[i].name + " ("+cur_department.initials+")"
 
             }
         }
@@ -261,8 +282,8 @@ export default class TermsPublicPage extends React.Component {
         let str = "";
         let array = this.state.disciplines;
         for (let i=0; i < array.length; i++) {
-            if (array[i].iddiscipline===discipline){
-                str = array[i].name
+            if (array[i].iddiscipline===+discipline){
+                str = array[i].name + " ("+array[i].department_id.initials+")"
             }
         }
         return  str;
