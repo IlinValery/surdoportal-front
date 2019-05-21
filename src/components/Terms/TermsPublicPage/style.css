@@ -1,0 +1,25 @@
+.filter-terms-view{
+
+}
+.filter-menu{
+    border-right: #e6e6e6 1px solid;
+    padding: 0 32px 0 0;
+    overflow-y: auto;
+    height: 85vh !important;
+}
+.filter-divider{
+    margin: 32px 0 32px 0;
+    border: #e1e1e1 1px solid;
+}
+.term-in-filter{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+.term-in-filter:active,
+.term-in-filter:hover{
+    background-color: #f2eeff;
+}
+.term-in-filter:focus{
+    background-color: #e5dfff;
+}
