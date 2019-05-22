@@ -10,7 +10,7 @@ class HomePage extends React.Component {
         super(props);
 
         this.state={
-            count: 0,
+            count_terms: 0,
         }
 
     }
@@ -26,8 +26,9 @@ class HomePage extends React.Component {
                 return response.json();
             })
             .then((data) => {
+
                 this.setState({
-                    count: data.count
+                    count_terms: data.count_terms
                 });
                 console.log(data)
             })
@@ -57,8 +58,8 @@ class HomePage extends React.Component {
                     <Row>
                         <Col/>
                         <Col className={"home-count-terms"}>
-                            <h1 className={"text-center "} style={{marginBottom: 0, fontWeight: "bold"}}>{this.state.count}</h1>
-                            <h3 className={"text-center "} style={{marginTop: 0}}>{this.setWordForm(this.state.count)} в системе</h3>
+                            <h1 className={"text-center "} style={{marginBottom: 0, fontWeight: "bold"}}>{this.state.count_terms}</h1>
+                            <h3 className={"text-center "} style={{marginTop: 0}}>{this.setWordForm(this.state.count_terms)} в системе</h3>
                         </Col>
                         <Col/>
                     </Row>
