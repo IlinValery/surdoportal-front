@@ -51,8 +51,7 @@ class HomePage extends React.Component {
             <div className={"home-page-container"}>
                 <h1 className={"text-center caption-home"}>СУРДОПОРТАЛ</h1>
                 <h2 className={"text-center"}>ИНТЕРАКТИВНАЯ БАЗА ТЕРМИНОВ,<br/>ИХ ОПРЕДЕЛЕНИЙ И ЖЕСТОВ</h2>
-                <img src={photo} className="img-fluid rounded mx-auto d-block"
-                     style={{height: "550px"}}
+                <img src={photo} className="img-fluid rounded mx-auto d-block" style={{marginTop: "32px", marginBottom: "32px"}}
                      alt="with enterpreter"/>
                 {this.state.count!==0? (
                     <Row>
