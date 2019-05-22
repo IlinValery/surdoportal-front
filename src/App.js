@@ -14,7 +14,7 @@ import {
     faMinus,
     faKey,
     faExclamationTriangle,
-    faSearch, faVideo
+    faSearch, faVideo,faBook, faUser, faUserSlash
 } from '@fortawesome/free-solid-svg-icons'
 
 
@@ -23,7 +23,8 @@ import Content from './Content'
 import Footer from './components/Common/Footer'
 
 //Always add icons to use them!
-library.add(faStroopwafel, faCheck, faTimes, faBars, faEllipsisV, faPen, faTrash, faPoo, faPlus, faMinus, faKey, faExclamationTriangle, faSearch, faVideo);
+library.add(faStroopwafel, faCheck, faTimes, faBars, faEllipsisV, faPen, faTrash, faPoo, faPlus, faMinus, faKey,
+    faExclamationTriangle, faSearch, faVideo, faBook, faUser, faUserSlash);
 
 class App extends React.Component {
   render() {

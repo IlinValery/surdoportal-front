@@ -21,15 +21,11 @@ export default class LogInList extends React.Component {
             popoverUserOpen: false,
             popoverElementOpen: false,
             popoverUserId: 0,
-            popoverElementId: 0
+            popoverElementId: 0,
+            userLogID: 0,
+            elementLogID: 0
         }
 
-    }
-
-    twoDigits(d) {
-        if(0 <= d && d < 10) return "0" + d.toString();
-        if(-10 < d && d < 0) return "-0" + (-1*d).toString();
-        return d.toString();
     }
 
     tooglePopoverUser(){
@@ -56,6 +52,15 @@ export default class LogInList extends React.Component {
                 currentLoggedInUser: +decoded.identity.id
             });
         }
+        if (Object.keys(this.props.log.user).length>1) {
+            this.setState({
+                userLogID: this.props.log.user.iduser
+            })
+        } else {
+            this.setState({
+                userLogID: this.props.log.user
+            })
+        }
     }
 
     returnTableName(table){
@@ -69,10 +74,13 @@ export default class LogInList extends React.Component {
         return name
     }
 
-    returnAction(action){
+    returnAction(action){ //TODO FOR TERM
+        console.log(action)
         if (action==="add"){ return (<FontAwesomeIcon icon={"plus"} color={"green"} title={"Добавлен"}/>)}
         else if (action==="delete"){ return (<FontAwesomeIcon icon={"minus"} color={"red"} title={"Удален"}/>)}
         else if (action==="edit_password"){ return (<FontAwesomeIcon icon={"key"} title={"Изменен пароль"} color={"#ff785d"}/>)}
+        else if (action==="validate_1"){ return (<FontAwesomeIcon icon={"check"} title={"Термин утвержден"} color={"green"}/>)}
+        else if (action==="validate_0"){ return (<FontAwesomeIcon icon={"times"} title={"Термин снят с утверждения"} color={"red"}/>)}
         else { return (<FontAwesomeIcon icon={"pen"} title={"Изменен"} color={"orange"}/>)}
     }
     returnElementInfo(element){
@@ -94,15 +102,49 @@ export default class LogInList extends React.Component {
                 <th scope="row">{this.props.log.idlog}</th>
                 <td>{this.props.log.date_time}</td>
                 <td>{this.returnTableName(this.props.log.table)}</td>
-                <td><Button id={this.state.popoverElementId} color={"link"} onClick={()=>this.tooglePopoverElement()} style={{paddingTop:0,paddingBottom:0}}>{this.props.log.element}</Button></td>
-                <td {...this.props.admin? {}:{style: {display: "none"}}}><Button id={this.state.popoverUserId} color={"link"} onClick={()=>this.tooglePopoverUser()} style={{paddingTop:0,paddingBottom:0}}>{this.props.log.user}</Button></td>
+                <td>
+                    <Button id={this.state.popoverElementId} color={"link"} onClick={()=>this.tooglePopoverElement()}
+                            style={{paddingTop:0,paddingBottom:0}}>
+                        {Object.keys(this.props.log.element).length>1? (
+                            <FontAwesomeIcon icon={"book"} title={"ID объекта "+this.props.log.element.id}/>
+                        ):(
+                            <FontAwesomeIcon icon={"trash"} title={"ID объекта "+this.props.log.element}/>
+                        )}
+                    </Button></td>
+                <td {...this.props.admin? {}:{style: {display: "none"}}}>
+                    <Button id={this.state.popoverUserId} color={"link"} onClick={()=>this.tooglePopoverUser()} style={{paddingTop:0,paddingBottom:0}}>
+                        {Object.keys(this.props.log.user).length>1? (<FontAwesomeIcon icon={"user"} title={"ID пользователя "+this.props.log.user.iduser}/>):(<FontAwesomeIcon icon={"user-slash"} title={"ID пользователя "+this.props.log.user}/>)}
+                    </Button>
+                </td>
                 <td>{this.returnAction(this.props.log.action)}</td>
+
+
+
                 <Popover trigger="legacy" isOpen={this.state.popoverElementOpen} target={this.state.popoverElementId} placement="bottom">
-                    {this.state.isLoadedElement? (<PopoverBody>{this.returnElementInfo(this.state.elementInfo)}</PopoverBody>):(<PopoverBody>Вероятно объект удален</PopoverBody>)}
+                    {Object.keys(this.props.log.element).length>1? (
+                        <PopoverBody>
+                            {this.props.log.element.text}
+                        </PopoverBody>
+                    ):(
+                        <PopoverBody className={"text-center"}>
+                            Объект удален
+                        </PopoverBody>)}
+
                 </Popover>
+
                 <Popover trigger="legacy" isOpen={this.state.popoverUserOpen} target={this.state.popoverUserId} placement="bottom">
-                    {this.state.currentLoggedInUser===this.props.log.user? (<PopoverBody className={"text-center"}>Это вы!</PopoverBody>):(
-                        <div>{this.state.isLoadedUser? (<PopoverBody>{this.state.userInfo.first_name} {this.state.userInfo.last_name}</PopoverBody>):(<PopoverBody className={"text-center"}>Пользователь удален</PopoverBody>)}</div>
+
+                    {this.state.currentLoggedInUser===this.state.userLogID? (<PopoverBody className={"text-center"}>Это вы!</PopoverBody>):(
+                        <div>
+                            {Object.keys(this.props.log.user).length>1? (
+                                <PopoverBody>
+                                    {this.props.log.user.first_name} {this.props.log.user.last_name}
+                                </PopoverBody>
+                            ):(
+                                <PopoverBody className={"text-center"}>
+                                    Пользователь удален
+                                </PopoverBody>)}
+                        </div>
                     )}
                 </Popover>
             </tr>
@@ -112,78 +154,6 @@ export default class LogInList extends React.Component {
     }
 
     componentDidMount() {
-        let linkUser = '/api/user/'+this.props.log.user;
-        let linkElement = '/api/'+this.props.log.table+'/'+this.props.log.element;
-        let timeout = Math.random()*(2000);
-        //for user:
-        if (this.state.currentLoggedInUser!==this.props.log.user){
-            setTimeout(()=>{
-                fetch(linkUser)
-                    .then((response) => {
-                        if (response.status !== 200) {
-                            console.log('Looks like there was a problem. Status Code: ' +
-                                response.status);
-                            return;
-                        }
-                        return response.json();
-                    })
-                    .then((data) => {
-                        if (data.data!==null) {
-                            this.setState({
-                                userInfo: data.data,
-                                isLoadedUser: true
-                            });
-                        }
-                    })
-                    .catch((err) => {
-                        console.log('Fetch Error:', err);
-                    });
-            },timeout);
-        }
-        //for elements
-        setTimeout(()=>{
-            fetch(linkElement)
-                .then((response) => {
-                    if (response.status !== 200) {
-                        console.log('Looks like there was a problem. Status Code: ' +
-                            response.status);
-                        return;
-                    }
-                    return response.json();
-                })
-                .then((data) => {
 
-                    if (data.data!==null) {
-                        if (this.props.log.table==="user") {
-                            let user = {first_name: data.data.first_name, last_name: data.data.last_name};
-                            this.setState({
-                                elementInfo: user,
-                                isLoadedElement: true
-                            })
-                        } else  if (this.props.log.table==="department") {
-                            let department = {initials: data.data.initials};
-                            this.setState({
-                                elementInfo: department,
-                                isLoadedElement: true
-                            })
-                        } else  if (this.props.log.table==="discipline") {
-                            let department = {name: data.data.name};
-                            this.setState({
-                                elementInfo: department,
-                                isLoadedElement: true
-                            })
-                        } else  if (this.props.log.table==="teacher") {
-                            let teacher = {name: data.data.name};
-                            this.setState({
-                                elementInfo: teacher,
-                                isLoadedElement: true
-                            })
-                        }
-                    }
-                })
-                .catch((err) => {
-                    console.log('Fetch Error:', err);
-                });
-        },timeout*2);
     }
 }
