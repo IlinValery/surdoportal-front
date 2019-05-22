@@ -85,7 +85,7 @@ export default class TermsAdminPage extends React.Component {
             <div>
                 <h1 className={"text-center"}>Панель управления терминами {this.state.is_superuser?("(администратор)"):("")}</h1>
                 <Row>
-                    <Col md={9}>
+                    <Col sm={12} md={9}>
                         {this.state.loadedTerms? (<div>
                             {this.state.terms.length>0?(<div>
                                 <Table hover borderless className={"text-center"}>
@@ -109,7 +109,7 @@ export default class TermsAdminPage extends React.Component {
                         </div>):(<LoadingMessage message={"Спокуха, мы загружаем для вас термины"}/>)}
 
                     </Col>
-                    <Col md={3}>
+                    <Col>
                         {this.state.loadedFilter? (
                             <div className={"filter-terms"}>
                                 <Form>

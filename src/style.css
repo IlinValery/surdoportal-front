@@ -11,3 +11,37 @@ h1{
 h2{
     font-size: x-large !important;
 }
+
+@media (max-width: 768px) {
+    .portal-content{
+        padding: 80px 5% 40px 5%;
+    }
+
+    h1{
+        font-size: large !important;
+    }
+    h2{
+        font-size: large !important;
+    }
+    h3,h4,h5{
+        font-size: medium !important;
+    }
+    p{
+        font-size: x-small !important;
+    }
+    table{
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        #display: block;
+        table-layout: fixed;
+    }
+    th,td{
+        overflow: hidden!important;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        word-wrap:break-word;
+        font-size: xx-small;
+    }
+    .btn-sm{font-size: 0.3rem !important; padding: .1rem .2rem !important;}
+    .btn {font-size: 0.6rem !important;}
+}

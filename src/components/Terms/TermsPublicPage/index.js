@@ -220,7 +220,7 @@ export default class TermsPublicPage extends React.Component {
                     <Col>
                         {this.state.contentLoaded? (<div>
                             <Row>
-                                <Col>
+                                <Col sm={12} md={6}>
                                     <h3>{this.state.term.caption}</h3>
                                     <img className={"rounded d-block img-fluid img-thumbnail"} style={{maxHeight: "250px"}} src={this.state.term.image_path} alt={""}/>
                                     <Jumbotron color={"black"} style={{padding: "8px", marginTop: "32px"}}>

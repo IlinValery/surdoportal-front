@@ -23,3 +23,11 @@
 .term-in-filter:focus{
     background-color: #e5dfff;
 }
+
+@media (max-width: 768px) {
+    .filter-menu{
+        padding: 0;
+        border-right: none;
+        margin-bottom: 32px;
+    }
+}

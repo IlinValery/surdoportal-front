@@ -3,3 +3,11 @@
     border-left: #e6e6e6 1px solid;
     padding: 0 0 0 32px;
 }
+
+@media (max-width: 768px) {
+    .filter-terms{
+        padding: 0;
+        border: none;
+        margin-bottom: 32px;
+    }
+}

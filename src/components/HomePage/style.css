@@ -3,7 +3,7 @@
 
 }
 .caption-home{
-    font-size: xx-large;
+    font-size: x-large !important;
     letter-spacing: 5px;
 }
 .home-count-terms{

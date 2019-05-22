@@ -118,7 +118,7 @@ export default class DepartmentModalEdit extends React.Component {
                 <ModalBody>
                     <Form>
                         <FormGroup>
-                            <Label for="initials">Короткое название</Label>
+                            <Label for="initials">Инициалы</Label>
                             <Input
                                 type="text"
                                 name="initials"
@@ -129,7 +129,7 @@ export default class DepartmentModalEdit extends React.Component {
                             />
                         </FormGroup>
                         <FormGroup>
-                            <Label for="caption">Длинное название</Label>
+                            <Label for="caption">Полное название</Label>
                             <Input
                                 type="text"
                                 name="caption"

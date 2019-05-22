@@ -55,12 +55,12 @@ class HomePage extends React.Component {
                      alt="with enterpreter"/>
                 {this.state.count!==0? (
                     <Row>
-                        <Col/>
+                        <Col md={4} sm={1}/>
                         <Col className={"home-count-terms"}>
                             <h1 className={"text-center "} style={{marginBottom: 0, fontWeight: "bold"}}>{this.state.count_terms}</h1>
                             <h3 className={"text-center "} style={{marginTop: 0}}>{this.setWordForm(this.state.count_terms)} в системе</h3>
                         </Col>
-                        <Col/>
+                        <Col md={4} sm={1}/>
                     </Row>
                 ):(<></>)}
             </div>
