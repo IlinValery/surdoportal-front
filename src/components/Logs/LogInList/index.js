@@ -123,11 +123,11 @@ export default class LogInList extends React.Component {
                 <Popover trigger="legacy" isOpen={this.state.popoverElementOpen} target={this.state.popoverElementId} placement="bottom">
                     {Object.keys(this.props.log.element).length>1? (
                         <PopoverBody>
-                            {this.props.log.element.text}
+                            {this.props.log.element.text} (ID: {this.props.log.element.id})
                         </PopoverBody>
                     ):(
                         <PopoverBody className={"text-center"}>
-                            Объект удален
+                            Объект удален (ID: {this.props.log.element})
                         </PopoverBody>)}
 
                 </Popover>
