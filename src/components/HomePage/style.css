@@ -3,9 +3,16 @@
 
 }
 .caption-home{
-    font-size: x-large !important;
+    font-size: 48 !important;
     letter-spacing: 5px;
 }
 .home-count-terms{
     margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+    .caption-home{
+        font-size: x-large !important;
+        letter-spacing: 5px;
+    }
 }

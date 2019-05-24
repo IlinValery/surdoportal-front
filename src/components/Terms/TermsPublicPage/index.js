@@ -83,7 +83,7 @@ export default class TermsPublicPage extends React.Component {
             objectsItems.push(
                 <ListGroupItem key={array[i].idterm} className={" overflow-hidden term-in-filter"}
                                tag="button" title={array[i].caption}
-                               onClick={()=>{this.renderChosenTerm(array[i].idterm)}}>
+                               onClick={()=>{this.renderChosenTerm(false, array[i].idterm)}}>
                     {array[i].caption}
                 </ListGroupItem>
             );
@@ -157,7 +157,8 @@ export default class TermsPublicPage extends React.Component {
         return (
             <div>
                 <Row>
-                    <Col lg={3} className={"filter-menu"}>
+                    <Col lg={3}>
+                        <div className={"filter-menu"}>
                         {this.state.loadedFilter? (
                             <div className={"filter-terms-view"}>
                                 {this.state.disciplines.length>0? (
@@ -203,6 +204,11 @@ export default class TermsPublicPage extends React.Component {
                                         <FontAwesomeIcon icon={"search"} style={{marginRight: "8px"}}/>
                                         Показать
                                     </Button>
+                                    <Button block size={"sm"}
+                                            outline
+                                            onClick={()=>{this.renderChosenTerm(true, 0)}}>
+                                        Показать случайный термин
+                                    </Button>
                                 </div>
                                 </div>):(<></>)}
 
@@ -216,6 +222,7 @@ export default class TermsPublicPage extends React.Component {
                                 {this.renderTerms(this.state.terms)}
                             </ListGroup>
                         ):(<LoadingMessage message={"Загрузка списка терминов"}/>)}
+                        </div>
                     </Col>
                     <Col>
                         {this.state.contentLoaded? (<div>
@@ -289,11 +296,11 @@ export default class TermsPublicPage extends React.Component {
         return  str;
     }
 
-    renderChosenTerm(term){
-        this.updateCurTerm(term).then(()=>this.loadTermInfo())
+    renderChosenTerm(random, term){
+        this.updateCurTerm(random, term).then(()=>this.loadTermInfo(random))
     }
 
-    updateCurTerm(term){
+    updateCurTerm(random, term){
         this.setState({
             chosen_term:term
         })
@@ -304,8 +311,14 @@ export default class TermsPublicPage extends React.Component {
         });
     }
 
-    loadTermInfo(){
-        fetch('/api/term/' + this.state.chosen_term)
+    loadTermInfo(random){
+        let link = "";
+        if (random) {
+            link = '/api/term/random'
+        } else {
+            link = '/api/term/' + this.state.chosen_term
+        }
+        fetch(link)
             .then((response) => {
                 if (response.status !== 200) {
                     console.log('Looks like there was a problem. Status Code: ' +
